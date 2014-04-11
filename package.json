@@ -1,0 +1,26 @@
+{
+  "name": "bus-api",
+  "version": "0.0.1",
+  "engines": {
+    "node": "0.10.24"
+  },
+  "description": "Personalized MetroTransit Web API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/TargetRAD/bus-api.git"
+  },
+  "author": "twistedstream",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TargetRAD/bus-api/issues"
+  },
+  "homepage": "https://github.com/TargetRAD/bus-api",
+  "dependencies": {
+    "restify": "~2.7.0",
+    "coffee-script": "~1.7.1"
+  }
+}
