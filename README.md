@@ -1,4 +1,3 @@
-bus-api
-=======
+# bus-api
 
-API for providing MetroTransit for a configured set of users
+Web API for providing MetroTransit API data for a configured set of users
