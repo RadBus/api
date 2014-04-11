@@ -21,6 +21,7 @@
   "homepage": "https://github.com/TargetRAD/bus-api",
   "dependencies": {
     "restify": "~2.7.0",
-    "coffee-script": "~1.7.1"
+    "coffee-script": "~1.7.1",
+    "moment-timezone": "0.0.3"
   }
 }
