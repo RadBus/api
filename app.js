@@ -3,7 +3,8 @@ var thisPackage = require('./package');
 var server = require('./server');
 
 // capabilities
-require('./api/index').register(server);
+require('./api').register(server);
+require('./web').register(server);
 
 // start
 var port = process.env.PORT || 5001;
