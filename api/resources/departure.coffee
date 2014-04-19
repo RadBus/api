@@ -1,8 +1,8 @@
 moment = require 'moment-timezone'
 
-exports.register = (server) ->
-  server.get '/departures', get
-  server.get '/departures/:routeFilter', get
+exports.register = (server, baseRoute) ->
+  server.get "#{baseRoute}/departures", get
+  server.get "#{baseRoute}/departures/:routeFilter", get
 
 get = (req, res, next) ->
   now = moment()

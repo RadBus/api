@@ -2,9 +2,9 @@ thisPackage = require '../../package'
 
 appName = ''
 
-exports.register = (server) ->
+exports.register = (server, baseRoute) ->
   appName = server.name
-  server.get '/', get
+  server.get "#{baseRoute}/", get
 
 get = (req, res, next) ->
   message = "#{appName} API, version #{thisPackage.version}"
