@@ -4,7 +4,6 @@ var server = require('./server');
 
 // capabilities
 require('./api').register(server);
-require('./web').register(server);
 
 // start
 var port = process.env.PORT || 5001;
