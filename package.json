@@ -1,6 +1,6 @@
 {
-  "name": "bus-api",
-  "version": "0.0.1",
+  "name": "radbus-api",
+  "version": "1.0.0",
   "engines": {
     "node": "0.10.24"
   },
