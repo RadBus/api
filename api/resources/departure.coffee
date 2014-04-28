@@ -43,4 +43,5 @@ get = (req, res, next) ->
       if a.time.isAfter(b.time) then 1 else -1
 
     res.send departures
-    next()
+
+  next()
