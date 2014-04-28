@@ -2,7 +2,7 @@ restify = require 'restify'
 
 exports.register = (server, baseRoute) ->
   server.get "#{baseRoute}/schedule", get
-#  server.post "#{baseRoute}/schedule", post
+  server.post "#{baseRoute}/schedule", post
 
 responseType = '404'
 
@@ -55,5 +55,14 @@ get = (req, res, next) ->
                 stops: ['112A']
 
         responseType = '404'
+
+  next()
+
+post = (req, res, next) ->
+  if not req.header 'Authorization'
+    res.send new restify.InvalidCredentialsError "Not so fast."
+
+  else
+    res.send 201
 
   next()
