@@ -10,6 +10,29 @@ server.use restify.bodyParser()
 server.use restify.queryParser
   mapParams: false
 
+# CORS support
+server.use restify.CORS()
+server.on 'MethodNotAllowed', (req, res, next) ->
+  if req.method.toUpperCase() is 'OPTIONS'
+    allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Authorization'];
+    allowMethods = ['GET', 'OPTIONS', 'POST']
+
+    for method in allowMethods
+      if res.methods.indexOf(method) is -1
+        res.methods.push(method);
+
+    res.header 'Access-Control-Allow-Credentials', true
+    res.header 'Access-Control-Allow-Headers', allowHeaders.join(', ')
+    res.header 'Access-Control-Allow-Methods', res.methods.join(', ')
+    res.header 'Access-Control-Allow-Origin', req.headers.origin
+
+    res.send 204;
+
+  else
+    res.send new restify.MethodNotAllowedError()
+
+  next()
+
 # request audit logging
 logRequest = (req, res, route, error) ->
   xForwardFor = req.header('X-Forwarded-For') or req.connection.remoteAddress
