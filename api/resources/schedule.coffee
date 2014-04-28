@@ -7,47 +7,53 @@ exports.register = (server, baseRoute) ->
 responseType = '404'
 
 get = (req, res, next) ->
-  switch responseType
-    when '404'
-      res.send new restify.ResourceNotFoundError "No schedules defined."
+  if not req.header 'Authorization'
+    res.send new restify.InvalidCredentialsError "Not so fast."
 
-      responseType = 'empty'
+  else
+    switch responseType
+      when '404'
+        res.send new restify.ResourceNotFoundError "No schedules defined."
 
-    when 'empty'
-      res.send {}
+        responseType = 'empty'
 
-      responseType = 'data'
+      when 'empty'
+        res.send {}
 
-    when 'data'
-      res.send
-        routes:
-          261:
-            am:
-              direction: 1
-              stops: ['GRCH']
-            pm:
-              direction: 4
-              stops: ['112A']
-          263:
-            am:
-              direction: 1
-              stops: ['RCPR']
-            pm:
-              direction: 4
-              stops: ['112A']
-          264:
-            am:
-              direction: 1
-              stops: ['CCPR']
-            pm:
-              direction: 4
-              stops: ['112A']
-          270:
-            am:
-              direction: 3
-              stops: ['MPWD', '61%24C', 'RCPR']
-            pm:
-              direction: 2
-              stops: ['112A']
+        responseType = 'data'
 
-      responseType = '404'
+      when 'data'
+        res.send
+          routes:
+            261:
+              am:
+                direction: 1
+                stops: ['GRCH']
+              pm:
+                direction: 4
+                stops: ['112A']
+            263:
+              am:
+                direction: 1
+                stops: ['RCPR']
+              pm:
+                direction: 4
+                stops: ['112A']
+            264:
+              am:
+                direction: 1
+                stops: ['CCPR']
+              pm:
+                direction: 4
+                stops: ['112A']
+            270:
+              am:
+                direction: 3
+                stops: ['MPWD', '61%24C', 'RCPR']
+              pm:
+                direction: 2
+                stops: ['112A']
+
+        responseType = '404'
+
+  next()
