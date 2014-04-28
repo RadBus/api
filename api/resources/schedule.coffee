@@ -18,12 +18,15 @@ get = (req, res, next) ->
         responseType = 'empty'
 
       when 'empty'
-        res.send {}
+        res.send
+          editUrl: 'https://drive.google.com'
+          routes: {}
 
         responseType = 'data'
 
       when 'data'
         res.send
+          editUrl: 'https://drive.google.com'
           routes:
             261:
               am:
