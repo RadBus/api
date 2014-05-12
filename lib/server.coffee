@@ -1,9 +1,13 @@
 restify = require 'restify'
 thisPackage = require '../package'
 
+LOG_PREFIX = 'SERVER: '
+
 # configure server
 server = restify.createServer
   name: thisPackage.description
+
+server.appVersion = thisPackage.version
 
 # CORS support
 server.pre restify.CORS()
@@ -35,10 +39,6 @@ server.use (req, res, next) ->
   isSecure = req.isSecure() or (req.headers['x-forwarded-proto'] is 'https')
   isLocalhost = host is 'localhost'
 
-  console.log "host = #{host}"
-  console.log "isSecure = #{isSecure}"
-  console.log "isLocalhost = #{isLocalhost}"
-
   if not isSecure and not isLocalhost
     res.header 'Location', "https://#{hostPort}#{req.url}"
     res.send 301
@@ -66,7 +66,7 @@ logRequest = (req, res, route, error) ->
   contentLength = res.header('Content-Length') or '-'
   userAgent = req.header('User-Agent') or '-'
 
-  console.log "#{xForwardFor} \"#{method} #{url} HTTP/#{httpVersion}\":#{contentType} " +
+  console.log "#{LOG_PREFIX}#{xForwardFor} \"#{method} #{url} HTTP/#{httpVersion}\":#{contentType} " +
               "request-id=#{requestId} accept=#{accept} status=#{status} " +
               "#{contentType}:#{contentLength} \"#{userAgent}\""
 
@@ -76,7 +76,7 @@ server.on 'after', logRequest
 server.on 'uncaughtException', (req, res, route, error) ->
   requestId = req.header('X-Request-ID') or '[none]';
 
-  console.log "ERROR (request-id=#{requestId}): #{error.stack}"
+  console.log "#{LOG_PREFIX}ERROR (request-id=#{requestId}): #{error.stack}"
   res.send new restify.InternalError("Ah CRAP! #{requestId}")
 
   logRequest req, res, route, error

@@ -1,12 +1,9 @@
-thisPackage = require '../../package'
-
-appName = ''
+API_VERSION = '1.0.0'
 
 exports.register = (server, baseRoute) ->
-  appName = server.name
-  server.get "#{baseRoute}/", get
-
-get = (req, res, next) ->
-  message = "#{appName} API, version #{thisPackage.version}"
-  res.send message
-  next()
+  server.get "#{baseRoute}/", (req, res, next) ->
+    res.send
+      service_name: server.name
+      app_version: server.appVersion
+      api_version: API_VERSION
+    next()

@@ -1,6 +1,8 @@
 Q = require 'q'
 mongoose = require 'mongoose'
 
+LOG_PREFIX = 'DB: '
+
 # Open the default database connection
 exports.open = ->
   d = Q.defer()
@@ -17,18 +19,18 @@ exports.open = ->
         renderHost(connection)
     ssl = if connection.db.serverConfig.ssl then 'SSL' else 'No SSL'
 
-    console.log "Default database connection opened to: #{hosts}/#{connection.name} (#{ssl})"
+    console.log "#{LOG_PREFIX}Default database connection opened to: #{hosts}/#{connection.name} (#{ssl})"
 
     d.resolve()
 
   # If the connection throws an error
   mongoose.connection.on 'error', (err) ->
-    console.error "Database default connection error: #{err}"
+    console.error "#{LOG_PREFIX}Database default connection error: #{err}"
     d.reject err
 
   # If the Node process ends, close the Mongoose connection
   onProcessTermination = ->
-    console.log "Closing default database connection due to app termination..."
+    console.log "#{LOG_PREFIX}Closing default database connection due to app termination..."
     exports.close()
       .then ->
         process.exit 0
@@ -38,7 +40,7 @@ exports.open = ->
 
   # Perform the connect
   uri = process.env.MONGOHQ_URL
-  console.log "Opening default database connection..."
+  console.log "#{LOG_PREFIX}Opening default database connection..."
   mongoose.connect uri
 
   d.promise
@@ -49,7 +51,7 @@ exports.close = ->
 
   # When the connection is disconnected
   mongoose.connection.on 'disconnected', () ->
-    console.log "Database default connection closed"
+    console.log "#{LOG_PREFIX}Database default connection closed"
     d.resolve()
 
   # Perform the close
