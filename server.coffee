@@ -5,13 +5,8 @@ thisPackage = require './package'
 server = restify.createServer
   name: thisPackage.description
 
-server.use restify.gzipResponse()
-server.use restify.bodyParser()
-server.use restify.queryParser
-  mapParams: false
-
 # CORS support
-server.use restify.CORS()
+server.pre restify.CORS()
 server.on 'MethodNotAllowed', (req, res, next) ->
   if req.method.toUpperCase() is 'OPTIONS'
     allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Authorization'];
@@ -32,6 +27,30 @@ server.on 'MethodNotAllowed', (req, res, next) ->
     res.send new restify.MethodNotAllowedError()
 
   next()
+
+# require HTTPS
+server.use (req, res, next) ->
+  hostPort = req.header('Host')
+  host = /^(.+?)(:\d+)?$/.exec(hostPort)[1]
+  isSecure = req.isSecure() or (req.headers['x-forwarded-proto'] is 'https')
+  isLocalhost = host is 'localhost'
+
+  console.log "host = #{host}"
+  console.log "isSecure = #{isSecure}"
+  console.log "isLocalhost = #{isLocalhost}"
+
+  if not isSecure and not isLocalhost
+    res.header 'Location', "https://#{hostPort}#{req.url}"
+    res.send 301
+    next false
+
+  else
+    next()
+
+server.use restify.gzipResponse()
+server.use restify.bodyParser()
+server.use restify.queryParser
+  mapParams: false
 
 # request audit logging
 logRequest = (req, res, route, error) ->
