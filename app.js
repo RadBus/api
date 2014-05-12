@@ -1,6 +1,6 @@
 require('coffee-script/register');
 var thisPackage = require('./package');
-var server = require('./server');
+var server = require('./lib/server');
 var db = require('./lib/db');
 
 // capabilities

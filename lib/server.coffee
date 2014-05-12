@@ -1,5 +1,5 @@
 restify = require 'restify'
-thisPackage = require './package'
+thisPackage = require '../package'
 
 # configure server
 server = restify.createServer
