@@ -1,71 +1,40 @@
-restify = require 'restify'
+http = require '../../lib/http'
+schedule = require '../../data/schedule'
 
 exports.register = (server, baseRoute) ->
-  server.get "#{baseRoute}/schedule", get
-  server.post "#{baseRoute}/schedule", post
+  http.get server, "#{baseRoute}/schedule", get
 
-responseType = '404'
+get = ->
+  # TODO: get from Google API profile call
+  googleId = 'foo'
 
-get = (req, res, next) ->
-  if not req.header 'Authorization'
-    res.send new restify.InvalidCredentialsError "Not so fast."
-
-  else
-    switch responseType
-      when '404'
-        res.send new restify.ResourceNotFoundError "No schedules defined."
-
-        responseType = 'empty'
-
-      when 'empty'
-        res.send
-          editUrl: 'https://drive.google.com'
-          routes: {}
-
-        responseType = 'data'
-
-      when 'data'
-        res.send
-          editUrl: 'https://drive.google.com'
-          routes:
-            261:
-              am:
-                direction: 1
-                stops: ['GRCH']
-              pm:
-                direction: 4
-                stops: ['112A']
-            263:
-              am:
-                direction: 1
-                stops: ['RCPR']
-              pm:
-                direction: 4
-                stops: ['112A']
-            264:
-              am:
-                direction: 1
-                stops: ['CCPR']
-              pm:
-                direction: 4
-                stops: ['112A']
-            270:
-              am:
-                direction: 3
-                stops: ['MPWD', '61%24C', 'RCPR']
-              pm:
-                direction: 2
-                stops: ['112A']
-
-        responseType = '404'
-
-  next()
-
-post = (req, res, next) ->
-  if not req.header 'Authorization'
-    res.send new restify.InvalidCredentialsError "Not so fast."
-
-  else
-    res.send 201
-
-  next()
+  schedule.fetch(googleId)
+    .then (schedule) ->
+      userDisplayName: 'Joe User'
+      routes:
+        if schedule is null then []
+        else
+          for route in schedule.routes
+            id: route.id
+            # TODO: get actual route description
+            description: '(route description)'
+            am:
+              direction:
+                id: route.am.direction
+                # TODO: get actual direction description
+                description: '(direction description)'
+              stops:
+                for stop in route.am.stops
+                  id: stop
+                  # TODO: get actual stop description
+                  description: '(stop description)'
+            pm:
+              direction:
+                id: route.pm.direction
+                # TODO: get actual direction description
+                name: '(direction description)'
+              stops:
+                for stop in route.pm.stops
+                  id: stop
+                  # TODO: get actual stop description
+                  description: '(stop description)'
