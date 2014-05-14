@@ -36,7 +36,7 @@
 <h2>
 <a name="authentication" class="anchor" href="#authentication"><span class="octicon octicon-link"></span></a>Authentication</h2>
 
-<p>Many RadBus API endpoints require requests to be authenticated.  Rather than store user credentials internally, RadBus uses <a href="http://tools.ietf.org/html/rfc6750">OAuth2 Authorization</a> to identify the user and then uses an identifier (ex: email address) as a foreign key to their RadBus data.</p>
+<p>Many RadBus API endpoints require requests to be authenticated.  Rather than store user credentials internally, RadBus uses <a href="http://tools.ietf.org/html/rfc6750">OAuth2 Authorization</a> to identify the user and then uses an identifier (ex: hash of email address) as a foreign key to their RadBus data.</p>
 
 <p>To use a request that requires authentication you must pass an <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.8">Authorization</a> HTTP header with a <code>Bearer</code> token obtained by a supported OAuth2 provider.  Currently the RadBus API only supports OAuth2 tokens generated from Google ID's, which you can learn more about <a href="https://developers.google.com/accounts/docs/OAuth2">here</a>.</p>
 
