@@ -34,6 +34,13 @@
         <p>The RabBus Web API enables applications to obtain Twin Cities Metro Transit departure information for users with configured route schedules.  As long as the calling application provides an OAuth2 token that can be used to locate a user's schedule in the RadBus sysem, it can be used to look up their AM or PM routes and provide upcoming departure information for their configured stops.</p>
 
 <h2>
+<a name="authentication" class="anchor" href="#authentication"><span class="octicon octicon-link"></span></a>Authentication</h2>
+
+<p>Many RadBus API endpoints require requests to be authenticated.  Rather than store user credentials internally, RadBus uses <a href="http://tools.ietf.org/html/rfc6750">OAuth2 Authorization</a> to identify the user and then uses an identifier (ex: email address) as a foreign key to their RadBus data.</p>
+
+<p>To use a request that requires authentication you must pass an <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.8">Authorization</a> HTTP header with a <code>Bearer</code> token obtained by a supported OAuth2 provider.  Currently the RadBus API only supports OAuth2 tokens generated from Google ID's, which you can learn more about <a href="https://developers.google.com/accounts/docs/OAuth2">here</a>.</p>
+
+<h2>
 <a name="version-1-resources" class="anchor" href="#version-1-resources"><span class="octicon octicon-link"></span></a>Version 1 Resources</h2>
 
 <h3>
@@ -150,6 +157,8 @@
 <h5>
 <a name="request-3" class="anchor" href="#request-3"><span class="octicon octicon-link"></span></a>Request</h5>
 
+<p>Requires <a href="#authentication">Authentication</a></p>
+
 <pre><code>GET https://api.radbus.io/v1/schedule
 Authorization: Bearer &lt;oauth2-token&gt;
 </code></pre>
@@ -223,6 +232,8 @@ Authorization: Bearer &lt;oauth2-token&gt;
 <h5>
 <a name="request-4" class="anchor" href="#request-4"><span class="octicon octicon-link"></span></a>Request</h5>
 
+<p>Requires <a href="#authentication">Authentication</a></p>
+
 <pre><code>POST https://api.radbus.io/v1/schedule
 Authorization: Bearer &lt;oauth2-token&gt;
 Content-Type: application/json
@@ -271,6 +282,8 @@ Content-Type: application/json
 <h5>
 <a name="request-5" class="anchor" href="#request-5"><span class="octicon octicon-link"></span></a>Request</h5>
 
+<p>Requires <a href="#authentication">Authentication</a></p>
+
 <pre><code>DELETE https://api.radbus.io/v1/schedule/4
 Authorization: Bearer &lt;oauth2-token&gt;
 </code></pre>
@@ -298,6 +311,8 @@ Authorization: Bearer &lt;oauth2-token&gt;
 
 <h5>
 <a name="request-6" class="anchor" href="#request-6"><span class="octicon octicon-link"></span></a>Request</h5>
+
+<p>Requires <a href="#authentication">Authentication</a></p>
 
 <pre><code>GET https://api.radbus.io/v1/departures
 Authorization: Bearer &lt;oauth2-token&gt;
