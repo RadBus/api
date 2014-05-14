@@ -258,8 +258,8 @@ Content-Type: application/json
 <p><code>400 Bad Request</code>: The request body was invalid.  The response will contain specific validation error messages:</p>
 
 <div class="highlight highlight-json"><pre><span class="p">{</span>
-  <span class="nt">"code"</span><span class="p">:</span> <span class="s2">"InvalidContentError"</span>
-  <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"The route ID 'foo' does not exist."</span>
+  <span class="nt">"code"</span><span class="p">:</span> <span class="s2">"InvalidContentError"</span><span class="p">,</span>
+  <span class="nt">"message"</span><span class="p">:</span> <span class="s2">"The route ID 'foo' does not exist."</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -318,8 +318,8 @@ Authorization: Bearer &lt;oauth2-token&gt;
   <span class="p">{</span>
     <span class="nt">"time"</span><span class="p">:</span> <span class="s2">"2014-05-14T14:27:00.863Z"</span><span class="p">,</span>
     <span class="nt">"route"</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"270"</span>
-      <span class="s2">"terminal"</span><span class="p">:</span> <span class="s2">"C"</span>
+      <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"270"</span><span class="p">,</span>
+      <span class="nt">"terminal"</span><span class="p">:</span> <span class="s2">"C"</span>
     <span class="p">},</span> 
     <span class="nt">"stop"</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"MPWD"</span><span class="p">,</span>
