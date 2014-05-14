@@ -1,74 +1,83 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="RadBus Web API : REST API Documentaion" />
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>RadBus Web API by TargetRAD</title>
+    <title>RadBus Web API</title>
   </head>
 
   <body>
 
-    <header>
-      <div class="container">
-        <h1>RadBus Web API</h1>
-        <h2>REST API Documentaion</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/TargetRAD/radbus-api">View on GitHub</a>
 
-        <section id="downloads">
-          <a href="https://github.com/TargetRAD/radbus-api/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/TargetRAD/radbus-api/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/TargetRAD/radbus-api" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
+          <h1 id="project_title">RadBus Web API</h1>
+          <h2 id="project_tagline">REST API Documentaion</h2>
 
-    <div class="container">
-      <section id="main_content">
-        <h2>
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/TargetRAD/radbus-api/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/TargetRAD/radbus-api/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>The RabBus Web API enables applications to obtain Twin Cities Metro Transit departure information for users with configured route schedules.  As long as the calling application provides an OAuth2 token that can be used to locate a user's schedule in the RadBus sysem, it can be used to look up their AM or PM routes and provide upcoming departure information for their configured stops.</p>
+
+<h2>
 <a name="version-1-resources" class="anchor" href="#version-1-resources"><span class="octicon octicon-link"></span></a>Version 1 Resources</h2>
 
 <h3>
-<a name="root-v1" class="anchor" href="#root-v1"><span class="octicon octicon-link"></span></a>Root (/v1)</h3>
+<a name="root" class="anchor" href="#root"><span class="octicon octicon-link"></span></a>Root</h3>
 
 <p>Provides description and version information about the v1 API.</p>
 
 <h4>
-<a name="fetch" class="anchor" href="#fetch"><span class="octicon octicon-link"></span></a>Fetch</h4>
+<a name="fetch-get-v1" class="anchor" href="#fetch-get-v1"><span class="octicon octicon-link"></span></a>Fetch (GET /v1)</h4>
 
-<p><strong>Request</strong></p>
+<h5>
+<a name="request" class="anchor" href="#request"><span class="octicon octicon-link"></span></a>Request</h5>
 
 <pre><code>GET https://api.radbus.io/v1
 </code></pre>
 
-<p><strong>Response</strong></p>
+<h5>
+<a name="response" class="anchor" href="#response"><span class="octicon octicon-link"></span></a>Response</h5>
 
 <p><code>200 OK</code></p>
 
 <div class="highlight highlight-json"><pre><span class="p">{</span>
-  <span class="nt">"service_name"</span><span class="p">:</span> <span class="s2">"Transit Data REST API Service"</span><span class="p">,</span>
+  <span class="nt">"service_name"</span><span class="p">:</span> <span class="s2">"RadBus Web API"</span><span class="p">,</span>
   <span class="nt">"app_version"</span><span class="p">:</span> <span class="s2">"0.1.0"</span><span class="p">,</span>
   <span class="nt">"api_version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span>
 <span class="p">}</span>
 </pre></div>
 
 <h3>
-<a name="route-list-v1routes" class="anchor" href="#route-list-v1routes"><span class="octicon octicon-link"></span></a>Route List (/v1/routes)</h3>
+<a name="route-list" class="anchor" href="#route-list"><span class="octicon octicon-link"></span></a>Route List</h3>
 
 <p>A list of all available transit routes.</p>
 
 <h4>
-<a name="fetch-1" class="anchor" href="#fetch-1"><span class="octicon octicon-link"></span></a>Fetch</h4>
+<a name="fetch-get-v1routes" class="anchor" href="#fetch-get-v1routes"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/routes)</h4>
 
-<p><strong>Request</strong></p>
+<h5>
+<a name="request-1" class="anchor" href="#request-1"><span class="octicon octicon-link"></span></a>Request</h5>
 
 <pre><code>GET https://api.radbus.io/v1/routes
 </code></pre>
 
-<p><strong>Response</strong></p>
+<h5>
+<a name="response-1" class="anchor" href="#response-1"><span class="octicon octicon-link"></span></a>Response</h5>
 
 <p><code>200 OK</code></p>
 
@@ -82,17 +91,21 @@
 </pre></div>
 
 <h3>
-<a name="route-details-v1routesroute" class="anchor" href="#route-details-v1routesroute"><span class="octicon octicon-link"></span></a>Route Details (/v1/routes/:route)</h3>
+<a name="route-details" class="anchor" href="#route-details"><span class="octicon octicon-link"></span></a>Route Details</h3>
+
+<p>Transit route details, including directions and stops.</p>
 
 <h4>
-<a name="fetch-2" class="anchor" href="#fetch-2"><span class="octicon octicon-link"></span></a>Fetch</h4>
+<a name="fetch-get-v1routesroute" class="anchor" href="#fetch-get-v1routesroute"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/routes/:route)</h4>
 
-<p><strong>Request</strong></p>
+<h5>
+<a name="request-2" class="anchor" href="#request-2"><span class="octicon octicon-link"></span></a>Request</h5>
 
 <pre><code>GET https://api.radbus.io/v1/routes/4
 </code></pre>
 
-<p><strong>Response</strong></p>
+<h5>
+<a name="response-2" class="anchor" href="#response-2"><span class="octicon octicon-link"></span></a>Response</h5>
 
 <p><code>200 OK</code></p>
 
@@ -129,11 +142,210 @@
 <h3>
 <a name="schedule" class="anchor" href="#schedule"><span class="octicon octicon-link"></span></a>Schedule</h3>
 
+<p>A user's configured schedule in the RadBus system.</p>
+
+<h4>
+<a name="fetch-get-v1schedule" class="anchor" href="#fetch-get-v1schedule"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/schedule)</h4>
+
+<h5>
+<a name="request-3" class="anchor" href="#request-3"><span class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>GET https://api.radbus.io/v1/schedule
+Authorization: Bearer &lt;oauth2-token&gt;
+</code></pre>
+
+<h5>
+<a name="success-response" class="anchor" href="#success-response"><span class="octicon octicon-link"></span></a>Success Response</h5>
+
+<p>If no schedule exists for the authenticated user, then a response is returned with no routes:</p>
+
+<p><code>200 OK</code></p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+  <span class="nt">"user_display_name"</span><span class="p">:</span> <span class="s2">"Joe User"</span><span class="p">,</span>
+  <span class="nt">"routes:"</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Otherwise, a response is returned that contains routes:</p>
+
+<p><code>200 OK</code></p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+  <span class="nt">"user_display_name"</span><span class="p">:</span> <span class="s2">"Joe User"</span><span class="p">,</span>
+  <span class="nt">"routes"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
+      <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"4 - New Brighton - Johnson St - Bryant Av - Southtown"</span>
+      <span class="s2">"am"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"direction"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"Southbound"</span>
+        <span class="p">},</span>
+        <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"O81A"</span><span class="p">,</span>
+            <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"1st Ave NW and Old Hwy 8"</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"SLVI"</span><span class="p">,</span>
+            <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"Silver Lake Village"</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="nt">"pm"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"direction"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">"id"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+          <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"Northbound"</span>
+        <span class="p">},</span>
+        <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"7SNI"</span><span class="p">,</span>
+            <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"Nicollet Mall and 7th St S"</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<h5>
+<a name="error-responses" class="anchor" href="#error-responses"><span class="octicon octicon-link"></span></a>Error Responses</h5>
+
+<p><code>401 Unauthorized</code>: no <code>Authorization</code> request header was passed or the provided OAuth2 token is invalid</p>
+
+<h4>
+<a name="add-route-post-v1schedule" class="anchor" href="#add-route-post-v1schedule"><span class="octicon octicon-link"></span></a>Add Route (POST /v1/schedule)</h4>
+
+<p>Adds a single route to the authenticated user's schedule.</p>
+
+<h5>
+<a name="request-4" class="anchor" href="#request-4"><span class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>POST https://api.radbus.io/v1/schedule
+Authorization: Bearer &lt;oauth2-token&gt;
+Content-Type: application/json
+</code></pre>
+
+<p>The request body needs to contain a route ID and both AM and PM direction/stops:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+  <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
+  <span class="nt">"am"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"direction"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"O81A"</span><span class="p">,</span> <span class="s2">"SLVI"</span><span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nt">"pm"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"direction"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"7SNI"</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h5>
+<a name="success-response-1" class="anchor" href="#success-response-1"><span class="octicon octicon-link"></span></a>Success Response</h5>
+
+<p><code>201 Created</code></p>
+
+<p>Call <code>GET /schedule</code> to see the updated schedule.</p>
+
+<h5>
+<a name="failure-responses" class="anchor" href="#failure-responses"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
+
+<p><code>401 Unauthorized</code>: No <code>Authorization</code> request header was passed or the provided OAuth2 token is invalid.</p>
+
+<p><code>400 Bad Request</code>: The request body was invalid.  The response will contain specific validation error messages:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+  <span class="nt">"code"</span><span class="p">:</span> <span class="s2">"InvalidContentError"</span>
+  <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"The route ID 'foo' does not exist."</span>
+<span class="p">}</span>
+</pre></div>
+
+<h4>
+<a name="remove-route-delete-v1scheduleroute" class="anchor" href="#remove-route-delete-v1scheduleroute"><span class="octicon octicon-link"></span></a>Remove Route (DELETE /v1/schedule/:route)</h4>
+
+<p>Removes an existing route from the authenticated user's schedule.</p>
+
+<h5>
+<a name="request-5" class="anchor" href="#request-5"><span class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>DELETE https://api.radbus.io/v1/schedule/4
+Authorization: Bearer &lt;oauth2-token&gt;
+</code></pre>
+
+<h5>
+<a name="success-response-2" class="anchor" href="#success-response-2"><span class="octicon octicon-link"></span></a>Success Response</h5>
+
+<p><code>204 No Content</code></p>
+
+<p>Call <code>GET /schedule</code> to see the updated schedule.</p>
+
+<h5>
+<a name="error-responses-1" class="anchor" href="#error-responses-1"><span class="octicon octicon-link"></span></a>Error Responses</h5>
+
+<p><code>401 Unauthorized</code>: No <code>Authorization</code> request header was passed or the provided OAuth2 token is invalid.
+<code>400 Bad Request</code>: The specified route did not exist within the schedule.</p>
+
 <h3>
 <a name="departures" class="anchor" href="#departures"><span class="octicon octicon-link"></span></a>Departures</h3>
+
+<p>A list of upcoming transit departures based on the user's configured schedule.</p>
+
+<h4>
+<a name="fetch-get-v1departures" class="anchor" href="#fetch-get-v1departures"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/departures)</h4>
+
+<h5>
+<a name="request-6" class="anchor" href="#request-6"><span class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>GET https://api.radbus.io/v1/departures
+Authorization: Bearer &lt;oauth2-token&gt;
+</code></pre>
+
+<h5>
+<a name="query-parameters" class="anchor" href="#query-parameters"><span class="octicon octicon-link"></span></a>Query Parameters</h5>
+
+<ul>
+<li>
+<code>route</code> - only return departures for the specified route</li>
+</ul><h5>
+<a name="success-response-3" class="anchor" href="#success-response-3"><span class="octicon octicon-link"></span></a>Success Response</h5>
+
+<p><code>200 OK</code></p>
+
+<div class="highlight highlight-json"><pre><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">"time"</span><span class="p">:</span> <span class="s2">"2014-05-14T14:27:00.863Z"</span><span class="p">,</span>
+    <span class="nt">"route"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"270"</span>
+      <span class="s2">"terminal"</span><span class="p">:</span> <span class="s2">"C"</span>
+    <span class="p">},</span> 
+    <span class="nt">"stop"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"MPWD"</span><span class="p">,</span>
+      <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"Maplewood Mall Transit Center"</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="err">...</span>
+<span class="p">]</span>
+</pre></div>
+
+<h5>
+<a name="error-responses-2" class="anchor" href="#error-responses-2"><span class="octicon octicon-link"></span></a>Error Responses</h5>
+
+<p><code>401 Unauthorized</code>: No <code>Authorization</code> request header was passed or the provided OAuth2 token is invalid.</p>
       </section>
     </div>
 
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">RadBus Web API maintained by <a href="https://github.com/TargetRAD">TargetRAD</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
     
+
   </body>
 </html>
