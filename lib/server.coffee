@@ -14,19 +14,28 @@ server.appVersion = thisPackage.version
 server.pre restify.CORS()
 server.on 'MethodNotAllowed', (req, res, next) ->
   if req.method.toUpperCase() is 'OPTIONS'
-    allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Authorization'];
-    allowMethods = ['GET', 'OPTIONS', 'POST']
+    allowHeaders = [
+      'Accept'
+      'Accept-Version'
+      'Content-Type'
+      'Authorization'
+    ]
+    allowMethods = [
+      'GET'
+      'OPTIONS'
+      'POST'
+    ]
 
     for method in allowMethods
       if res.methods.indexOf(method) is -1
-        res.methods.push(method);
+        res.methods.push(method)
 
     res.header 'Access-Control-Allow-Credentials', true
     res.header 'Access-Control-Allow-Headers', allowHeaders.join(', ')
     res.header 'Access-Control-Allow-Methods', res.methods.join(', ')
     res.header 'Access-Control-Allow-Origin', req.headers.origin
 
-    res.send 204;
+    res.send 204
 
   else
     res.send new restify.MethodNotAllowedError()
@@ -56,7 +65,8 @@ server.use restify.queryParser
 # request audit logging
 logRequest = (req, res, route, error) ->
   if error and error.inner
-    console.log "#{LOG_PREFIX}REQUEST ERROR (request-id=#{error.requestId}): #{error.inner.stack ? error.inner}"
+    console.log "#{LOG_PREFIX}REQUEST ERROR (request-id=#{error.requestId}): " +
+                "#{error.inner.stack ? error.inner}"
 
   xForwardFor = req.header('X-Forwarded-For') or req.connection.remoteAddress
   method = req.method
@@ -70,7 +80,8 @@ logRequest = (req, res, route, error) ->
   contentLength = res.header('Content-Length') or '-'
   userAgent = req.header('User-Agent') or '-'
 
-  console.log "#{LOG_PREFIX}#{xForwardFor} \"#{method} #{url} HTTP/#{httpVersion}\":#{contentType} " +
+  console.log "#{LOG_PREFIX}#{xForwardFor} \"#{method} #{url} " +
+              "HTTP/#{httpVersion}\":#{contentType} " +
               "request-id=#{requestId} accept=#{accept} status=#{status} " +
               "#{contentType}:#{contentLength} \"#{userAgent}\""
 

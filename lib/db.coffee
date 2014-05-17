@@ -13,13 +13,14 @@ exports.open = ->
 
     renderHost = (container) -> "#{container.host}:#{container.port}"
     hosts = if connection.replica
-        # multiple hosts
-        connection.hosts.map(renderHost).join ','
-      else
-        renderHost(connection)
+      # multiple hosts
+      connection.hosts.map(renderHost).join ','
+    else
+      renderHost(connection)
     ssl = if connection.db.serverConfig.ssl then 'SSL' else 'No SSL'
 
-    console.log "#{LOG_PREFIX}Default database connection opened to: #{hosts}/#{connection.name} (#{ssl})"
+    console.log "#{LOG_PREFIX}Default database connection opened to: " +
+                "#{hosts}/#{connection.name} (#{ssl})"
 
     d.resolve()
 
@@ -30,7 +31,8 @@ exports.open = ->
 
   # If the Node process ends, close the Mongoose connection
   onProcessTermination = ->
-    console.log "#{LOG_PREFIX}Closing default database connection due to app termination..."
+    console.log "#{LOG_PREFIX}Closing default database connection " +
+                "due to app termination..."
     exports.close()
       .then ->
         process.exit 0

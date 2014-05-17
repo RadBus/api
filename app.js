@@ -1,8 +1,10 @@
+'use strict';
+
 require('coffee-script/register');
 var server = require('./lib/server');
 var db = require('./lib/db');
 
-const LOG_PREFIX = 'APP: ';
+var LOG_PREFIX = 'APP: ';
 
 // capabilities
 require('./api').register(server);

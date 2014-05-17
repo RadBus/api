@@ -18,21 +18,22 @@ callApi = (url, state) ->
   d.promise
 
 exports.fetchAllRoutes = ->
-  callApi 'Routes'
+  callApi('Routes')
     .then (result) ->
       for item in result.json
         id: item.Route,
         description: item.Description
 
 exports.fetchRouteDetail = (routeId) ->
-  callApi "Directions/#{routeId}"
+  callApi("Directions/#{routeId}")
     .then (result) ->
       directions = for item in result.json
         direction =
           id: item.Value
-          description: item.Text.toLowerCase().replace /^(.)/, ($1) -> $1.toUpperCase()
+          description:
+            item.Text.toLowerCase().replace /^(.)/, ($1) -> $1.toUpperCase()
 
-        callApi "Stops/#{routeId}/#{direction.id}", direction
+        callApi("Stops/#{routeId}/#{direction.id}", direction)
           .then (result) ->
             result.state.stops =
               for item in result.json
@@ -44,7 +45,7 @@ exports.fetchRouteDetail = (routeId) ->
       Q.all directions
 
 exports.fetchDetapartures = (routeId, directionId, stopId) ->
-  callApi "/#{routeId}/#{directionId}/#{stopId}"
+  callApi("/#{routeId}/#{directionId}/#{stopId}")
     .then (result) ->
       for item in result.json
         time: moment(item.DepartureTime).tz(process.env.RADBUS_TIMEZONE)
@@ -53,6 +54,7 @@ exports.fetchDetapartures = (routeId, directionId, stopId) ->
           item.Terminal
         gate: if item.Gate
           item.Gate
-        location: if item.VehicleLatitude isnt 0 and item.VehicleLongitude isnt 0
-          lat: item.VehicleLatitude
-          long: item.VehicleLongitude
+        location:
+          if item.VehicleLatitude isnt 0 and item.VehicleLongitude isnt 0
+            lat: item.VehicleLatitude
+            long: item.VehicleLongitude

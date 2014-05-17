@@ -4,13 +4,16 @@ restify = require 'restify'
 # - action: function that takes Restify params (req, res) and returns a promise
 createHandler = (action) ->
   (req, res, next) ->
-    action req, res
+    action(req, res)
       .then (
-        # when the promise is resolved, Restify's res.send() is called with the promise value
+        # when the promise is resolved, Restify's res.send() is called
+        # with the promise value
         (val) ->
           res.send val
           next()),
-        # when the promise is rejected, Restify's next() callack is invoked with the error
+        # when the promise is rejected, Restify's next() callack is invoked
+        # with the error that is first passed through
+        # the internalError function
         (err) ->
           next exports.internalError req, err
 
@@ -27,7 +30,8 @@ exports.internalError = (req, inner) ->
     requestId = req.header('X-Request-ID') ? '[none]'
     error = new restify.InternalError "Something got borked! ID: #{requestId}"
     error.requestId = requestId
-    error.inner = inner ? new Error("An undefined error was returned by an API action!")
+    error.inner = inner ?
+      new Error("An undefined error was returned by an API action!")
 
     error
   else

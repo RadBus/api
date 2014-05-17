@@ -7,7 +7,9 @@
   "description": "RadBus Web API",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/gulp test",
+    "jshint": "node_modules/.bin/gulp jshint",
+    "coffeelint": "node_modules/.bin/gulp coffeelint"
   },
   "repository": {
     "type": "git",
@@ -26,5 +28,20 @@
     "q": "~1.0.1",
     "request": "~2.34.0",
     "mongoose": "~3.8.9"
+  },
+  "devDependencies": {
+    "gulp": "~3.6.2",
+    "gulp-jshint": "~1.6.1",
+    "jshint": "~2.5.1",
+    "mocha": "~1.18.2",
+    "chai": "~1.9.1",
+    "gulp-mocha": "~0.4.1",
+    "jshint-stylish": "~0.2.0",
+    "chai-as-promised": "~4.1.1",
+    "mockgoose": "~1.10.0",
+    "proxyquire": "~1.0.0",
+    "coffeelint": "~1.4.0",
+    "gulp-coffeelint": "~0.3.3",
+    "super-request": "0.0.8"
   }
 }
