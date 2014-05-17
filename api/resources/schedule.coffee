@@ -2,9 +2,9 @@ http = require '../../lib/http'
 schedule = require '../../data/schedule'
 
 exports.register = (server, baseRoute) ->
-  http.get server, "#{baseRoute}/schedule", get
+  http.get server, "#{baseRoute}/schedule", fetch
 
-get = ->
+fetch = ->
   # TODO: get from Google API profile call
   googleId = 'foo'
 
