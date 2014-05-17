@@ -1,5 +1,6 @@
 request = require 'request'
 Q = require 'q'
+moment = require 'moment-timezone'
 
 callApi = (url, state) ->
   options =
@@ -41,3 +42,17 @@ exports.fetchRouteDetail = (routeId) ->
             result.state
 
       Q.all directions
+
+exports.fetchDetapartures = (routeId, directionId, stopId) ->
+  callApi "/#{routeId}/#{directionId}/#{stopId}"
+    .then (result) ->
+      for item in result.json
+        time: moment(item.DepartureTime).tz(process.env.RADBUS_TIMEZONE)
+        routeId: item.Route
+        terminal: if item.Terminal
+          item.Terminal
+        gate: if item.Gate
+          item.Gate
+        location: if item.VehicleLatitude isnt 0 and item.VehicleLongitude isnt 0
+          lat: item.VehicleLatitude
+          long: item.VehicleLongitude
