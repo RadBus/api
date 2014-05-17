@@ -36,17 +36,33 @@
 <p>RadBus is an open source project built by people participating in the Twin Cities open source community who rely on Metro Transit to get to and from work every day.  To see the source code behind this API and learn about contributing to the project, click the GitHub icon at the top of this page.  To see a working RadBus client, check out the <a href="https://www.radbus.io">RadBus Web Client</a>.</p>
 
 <h2>
-<a name="authentication" class="anchor" href="#authentication"><span class="octicon octicon-link"></span></a>Authentication</h2>
+<a name="version-1-api" class="anchor" href="#version-1-api"><span class="octicon octicon-link"></span></a>Version 1 API</h2>
 
-<p>Many RadBus API endpoints require requests to be authenticated.  Rather than store user credentials internally, RadBus uses <a href="http://tools.ietf.org/html/rfc6750">OAuth2 Authorization</a> to identify the user and then uses an identifier (ex: hash of email address) as a foreign key to their RadBus data.</p>
+<h3>
+<a name="authentication" class="anchor" href="#authentication"><span class="octicon octicon-link"></span></a>Authentication</h3>
+
+<p>Many RadBus API endpoints require requests to be authenticated since they need access to a user's personal schedule configuration.  Rather than store user credentials internally, RadBus uses <a href="http://tools.ietf.org/html/rfc6750">OAuth2 Authorization</a> to identify the user and then is able to look up their RadBus data.</p>
+
+<h4>
+<a name="creating-an-oauth2-token" class="anchor" href="#creating-an-oauth2-token"><span class="octicon octicon-link"></span></a>Creating an OAuth2 Token</h4>
 
 <p>To use a request that requires authentication you must pass an <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.8">Authorization</a> HTTP header with a <code>Bearer</code> token obtained by a supported OAuth2 provider.  Currently the RadBus API only supports OAuth2 tokens generated from Google ID's, which you can learn more about <a href="https://developers.google.com/accounts/docs/OAuth2">here</a>.</p>
 
-<h2>
-<a name="version-1-resources" class="anchor" href="#version-1-resources"><span class="octicon octicon-link"></span></a>Version 1 Resources</h2>
+<p>When obtaining your OAuth2 token, one of the inputs is called <strong>scopes</strong>.  RadBus requires a specific scopes value in order to access the correct user information so their schedule can be looked up.  The client should call the <a href="#oauth2-scopes">OAuth2 Scopes</a> resource to obtain the correct scopes value.</p>
 
-<h3>
-<a name="root" class="anchor" href="#root"><span class="octicon octicon-link"></span></a>Root</h3>
+<h4>
+<a name="authentication-failure-responses" class="anchor" href="#authentication-failure-responses"><span class="octicon octicon-link"></span></a>Authentication Failure Responses</h4>
+
+<p>Any endpoint that requires authentication can produce the following errors:</p>
+
+<p><code>401 Unauthorized</code></p>
+
+<ul>
+<li>No <code>Authorization</code> request header was passed.</li>
+<li>The OAuth2 token in the <code>Authorization</code> request header was created using the wrong scopes value.  See the <a href="#creating-an-oauth2-token">Creating an OAuth2 Token</a> section above for information on how to use the right scopes value.</li>
+<li>The OAuth2 token in the <code>Authorization</code> request header has expired.  When this happens, the client should generate a new token and call the same RadBus API endpoint again.</li>
+</ul><h3>
+<a name="root-resource" class="anchor" href="#root-resource"><span class="octicon octicon-link"></span></a>Root Resource</h3>
 
 <p>Provides description and version information about the v1 API.</p>
 
@@ -54,13 +70,13 @@
 <a name="fetch-get-v1" class="anchor" href="#fetch-get-v1"><span class="octicon octicon-link"></span></a>Fetch (GET /v1)</h4>
 
 <h5>
-<a name="request" class="anchor" href="#request"><span class="octicon octicon-link"></span></a>Request</h5>
+<a name="sample-request" class="anchor" href="#sample-request"><span class="octicon octicon-link"></span></a>Sample Request</h5>
 
 <pre><code>GET https://api.radbus.io/v1
 </code></pre>
 
 <h5>
-<a name="response" class="anchor" href="#response"><span class="octicon octicon-link"></span></a>Response</h5>
+<a name="sample-success-response" class="anchor" href="#sample-success-response"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
 
 <p><code>200 OK</code></p>
 
@@ -72,7 +88,29 @@
 </pre></div>
 
 <h3>
-<a name="route-list" class="anchor" href="#route-list"><span class="octicon octicon-link"></span></a>Route List</h3>
+<a name="oauth2-scopes-resource" class="anchor" href="#oauth2-scopes-resource"><span class="octicon octicon-link"></span></a>OAuth2 Scopes Resource</h3>
+
+<p>The OAuth2 scopes value required by the RadBus API for all authenticated endpoints.</p>
+
+<h4>
+<a name="fetch-get-v1oauth2-scopes" class="anchor" href="#fetch-get-v1oauth2-scopes"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/oauth2-scopes)</h4>
+
+<h5>
+<a name="sample-request-1" class="anchor" href="#sample-request-1"><span class="octicon octicon-link"></span></a>Sample Request</h5>
+
+<pre><code>GET https://api.radbus.io/v1/oauth2-scopes
+</code></pre>
+
+<h5>
+<a name="sample-success-response-1" class="anchor" href="#sample-success-response-1"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
+
+<p><code>200 OK</code></p>
+
+<div class="highlight highlight-json"><pre><span class="s2">"scope1 scope2"</span>
+</pre></div>
+
+<h3>
+<a name="route-list-resource" class="anchor" href="#route-list-resource"><span class="octicon octicon-link"></span></a>Route List Resource</h3>
 
 <p>A list of all available transit routes.</p>
 
@@ -80,13 +118,13 @@
 <a name="fetch-get-v1routes" class="anchor" href="#fetch-get-v1routes"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/routes)</h4>
 
 <h5>
-<a name="request-1" class="anchor" href="#request-1"><span class="octicon octicon-link"></span></a>Request</h5>
+<a name="sample-request-2" class="anchor" href="#sample-request-2"><span class="octicon octicon-link"></span></a>Sample Request</h5>
 
 <pre><code>GET https://api.radbus.io/v1/routes
 </code></pre>
 
 <h5>
-<a name="response-1" class="anchor" href="#response-1"><span class="octicon octicon-link"></span></a>Response</h5>
+<a name="sample-success-response-2" class="anchor" href="#sample-success-response-2"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
 
 <p><code>200 OK</code></p>
 
@@ -100,7 +138,7 @@
 </pre></div>
 
 <h3>
-<a name="route-details" class="anchor" href="#route-details"><span class="octicon octicon-link"></span></a>Route Details</h3>
+<a name="route-details-resource" class="anchor" href="#route-details-resource"><span class="octicon octicon-link"></span></a>Route Details Resource</h3>
 
 <p>Transit route details, including directions and stops.</p>
 
@@ -108,13 +146,13 @@
 <a name="fetch-get-v1routesroute" class="anchor" href="#fetch-get-v1routesroute"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/routes/:route)</h4>
 
 <h5>
-<a name="request-2" class="anchor" href="#request-2"><span class="octicon octicon-link"></span></a>Request</h5>
+<a name="sample-request-3" class="anchor" href="#sample-request-3"><span class="octicon octicon-link"></span></a>Sample Request</h5>
 
 <pre><code>GET https://api.radbus.io/v1/routes/4
 </code></pre>
 
 <h5>
-<a name="response-2" class="anchor" href="#response-2"><span class="octicon octicon-link"></span></a>Response</h5>
+<a name="sample-success-response-3" class="anchor" href="#sample-success-response-3"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
 
 <p><code>200 OK</code></p>
 
@@ -149,7 +187,7 @@
 </pre></div>
 
 <h3>
-<a name="schedule" class="anchor" href="#schedule"><span class="octicon octicon-link"></span></a>Schedule</h3>
+<a name="schedule-resource" class="anchor" href="#schedule-resource"><span class="octicon octicon-link"></span></a>Schedule Resource</h3>
 
 <p>A user's configured schedule in the RadBus system.</p>
 
@@ -157,7 +195,7 @@
 <a name="fetch-get-v1schedule" class="anchor" href="#fetch-get-v1schedule"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/schedule)</h4>
 
 <h5>
-<a name="request-3" class="anchor" href="#request-3"><span class="octicon octicon-link"></span></a>Request</h5>
+<a name="sample-request-4" class="anchor" href="#sample-request-4"><span class="octicon octicon-link"></span></a>Sample Request</h5>
 
 <p>Requires <a href="#authentication">Authentication</a></p>
 
@@ -166,7 +204,7 @@ Authorization: Bearer &lt;oauth2-token&gt;
 </code></pre>
 
 <h5>
-<a name="success-response" class="anchor" href="#success-response"><span class="octicon octicon-link"></span></a>Success Response</h5>
+<a name="sample-success-response-4" class="anchor" href="#sample-success-response-4"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
 
 <p>If no schedule exists for the authenticated user, then a response is returned with no routes:</p>
 
@@ -187,8 +225,8 @@ Authorization: Bearer &lt;oauth2-token&gt;
   <span class="nt">"routes"</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
-      <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"4 - New Brighton - Johnson St - Bryant Av - Southtown"</span>
-      <span class="s2">"am"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"4 - New Brighton - Johnson St - Bryant Av - Southtown"</span><span class="p">,</span>
+      <span class="nt">"am"</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">"direction"</span><span class="p">:</span> <span class="p">{</span>
           <span class="nt">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
           <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"Southbound"</span>
@@ -221,18 +259,13 @@ Authorization: Bearer &lt;oauth2-token&gt;
 <span class="p">}</span>
 </pre></div>
 
-<h5>
-<a name="failure-responses" class="anchor" href="#failure-responses"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
-
-<p><code>401 Unauthorized</code>: no <code>Authorization</code> request header was passed or the provided OAuth2 token is invalid</p>
-
 <h4>
 <a name="add-route-post-v1schedule" class="anchor" href="#add-route-post-v1schedule"><span class="octicon octicon-link"></span></a>Add Route (POST /v1/schedule)</h4>
 
 <p>Adds a single route to the authenticated user's schedule.</p>
 
 <h5>
-<a name="request-4" class="anchor" href="#request-4"><span class="octicon octicon-link"></span></a>Request</h5>
+<a name="sample-request-5" class="anchor" href="#sample-request-5"><span class="octicon octicon-link"></span></a>Sample Request</h5>
 
 <p>Requires <a href="#authentication">Authentication</a></p>
 
@@ -257,18 +290,16 @@ Content-Type: application/json
 </pre></div>
 
 <h5>
-<a name="success-response-1" class="anchor" href="#success-response-1"><span class="octicon octicon-link"></span></a>Success Response</h5>
+<a name="sample-success-response-5" class="anchor" href="#sample-success-response-5"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
 
 <p><code>201 Created</code></p>
 
 <p>Call <a href="#fetch-get-v1schedule">Fetch</a> to see the updated schedule.</p>
 
 <h5>
-<a name="failure-responses-1" class="anchor" href="#failure-responses-1"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
+<a name="failure-responses" class="anchor" href="#failure-responses"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
 
-<p><code>401 Unauthorized</code>: No <code>Authorization</code> request header was passed or the provided OAuth2 token is invalid.</p>
-
-<p><code>400 Bad Request</code>: The request body was invalid.  The response will contain specific validation error messages:</p>
+<p><code>400 Bad Request</code>: The specified route data was invalid.  The response will contain specific validation error messages:</p>
 
 <div class="highlight highlight-json"><pre><span class="p">{</span>
   <span class="nt">"code"</span><span class="p">:</span> <span class="s2">"InvalidContentError"</span><span class="p">,</span>
@@ -282,7 +313,7 @@ Content-Type: application/json
 <p>Removes an existing route from the authenticated user's schedule.</p>
 
 <h5>
-<a name="request-5" class="anchor" href="#request-5"><span class="octicon octicon-link"></span></a>Request</h5>
+<a name="sample-request-6" class="anchor" href="#sample-request-6"><span class="octicon octicon-link"></span></a>Sample Request</h5>
 
 <p>Requires <a href="#authentication">Authentication</a></p>
 
@@ -291,20 +322,19 @@ Authorization: Bearer &lt;oauth2-token&gt;
 </code></pre>
 
 <h5>
-<a name="success-response-2" class="anchor" href="#success-response-2"><span class="octicon octicon-link"></span></a>Success Response</h5>
+<a name="sample-success-response-6" class="anchor" href="#sample-success-response-6"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
 
 <p><code>204 No Content</code></p>
 
 <p>Call <a href="#fetch-get-v1schedule">Fetch</a> to see the updated schedule.</p>
 
 <h5>
-<a name="failure-responses-2" class="anchor" href="#failure-responses-2"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
+<a name="failure-responses-1" class="anchor" href="#failure-responses-1"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
 
-<p><code>401 Unauthorized</code>: No <code>Authorization</code> request header was passed or the provided OAuth2 token is invalid.
-<code>400 Bad Request</code>: The specified route did not exist within the schedule.</p>
+<p><code>400 Bad Request</code>: The specified route did not exist within the schedule.</p>
 
 <h3>
-<a name="departures" class="anchor" href="#departures"><span class="octicon octicon-link"></span></a>Departures</h3>
+<a name="departures-resource" class="anchor" href="#departures-resource"><span class="octicon octicon-link"></span></a>Departures Resource</h3>
 
 <p>A list of upcoming transit departures based on the user's configured schedule.</p>
 
@@ -312,7 +342,7 @@ Authorization: Bearer &lt;oauth2-token&gt;
 <a name="fetch-get-v1departures" class="anchor" href="#fetch-get-v1departures"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/departures)</h4>
 
 <h5>
-<a name="request-6" class="anchor" href="#request-6"><span class="octicon octicon-link"></span></a>Request</h5>
+<a name="sample-request-7" class="anchor" href="#sample-request-7"><span class="octicon octicon-link"></span></a>Sample Request</h5>
 
 <p>Requires <a href="#authentication">Authentication</a></p>
 
@@ -327,7 +357,7 @@ Authorization: Bearer &lt;oauth2-token&gt;
 <li>
 <code>route</code> - only return departures for the specified route</li>
 </ul><h5>
-<a name="success-response-3" class="anchor" href="#success-response-3"><span class="octicon octicon-link"></span></a>Success Response</h5>
+<a name="sample-success-response-7" class="anchor" href="#sample-success-response-7"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
 
 <p><code>200 OK</code></p>
 
@@ -346,11 +376,6 @@ Authorization: Bearer &lt;oauth2-token&gt;
   <span class="err">...</span>
 <span class="p">]</span>
 </pre></div>
-
-<h5>
-<a name="failure-responses-3" class="anchor" href="#failure-responses-3"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
-
-<p><code>401 Unauthorized</code>: No <code>Authorization</code> request header was passed or the provided OAuth2 token is invalid.</p>
       </section>
     </div>
 
