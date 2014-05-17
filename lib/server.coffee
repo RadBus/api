@@ -1,5 +1,6 @@
 restify = require 'restify'
 thisPackage = require '../package'
+http = require './http'
 
 LOG_PREFIX = 'SERVER: '
 
@@ -54,6 +55,9 @@ server.use restify.queryParser
 
 # request audit logging
 logRequest = (req, res, route, error) ->
+  if error and error.inner
+    console.log "#{LOG_PREFIX}REQUEST ERROR (request-id=#{error.requestId}): #{error.inner.stack ? error.inner}"
+
   xForwardFor = req.header('X-Forwarded-For') or req.connection.remoteAddress
   method = req.method
   url = req.url
@@ -72,13 +76,9 @@ logRequest = (req, res, route, error) ->
 
 server.on 'after', logRequest
 
-# log errors on the server
+# log uncaught exceptions
 server.on 'uncaughtException', (req, res, route, error) ->
-  requestId = req.header('X-Request-ID') or '[none]';
-
-  console.log "#{LOG_PREFIX}ERROR (request-id=#{requestId}): #{error.stack}"
-  res.send new restify.InternalError("Ah CRAP! #{requestId}")
-
+  error = http.internalError req, error
   logRequest req, res, route, error
 
 module.exports = server
