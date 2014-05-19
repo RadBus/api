@@ -41,7 +41,7 @@ describe "util/db", ->
         wasOpened.should.be.true
 
     it "should fail if there's a connection error", ->
-      err = new Error('VOIP!')
+      err = new Error 'VOIP!'
       mongoose.connection.on = (event, callback) ->
         if event is 'error'
           process.nextTick -> callback err
