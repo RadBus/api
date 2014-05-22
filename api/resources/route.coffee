@@ -1,7 +1,7 @@
 http = require '../../lib/http'
-nextrip = require '../../data/nextrip'
+routeData = require '../../data/route'
 
 exports.register = (server, baseRoute) ->
-  http.get server, "#{baseRoute}/routes", nextrip.fetchAllRoutes
+  http.get server, "#{baseRoute}/routes", routeData.fetchAll
   http.get server, "#{baseRoute}/routes/:routeId", (req, res) ->
-    nextrip.fetchRouteDetail req.params.routeId
+    routeData.fetchDetail req.params.routeId
