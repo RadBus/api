@@ -1,6 +1,8 @@
-exports.register = (server, baseRoute) ->
-  server.get "#{baseRoute}/oauth2-scopes", get
+http = require '../../lib/http'
+Q = require 'q'
 
-get = (req, res, next) ->
-  res.send process.env.RADBUS_GOOGLE_API_AUTH_SCOPES
-  next()
+exports.register = (server, baseRoute) ->
+  http.get server, "#{baseRoute}/oauth2-scopes", get
+
+get = ->
+  Q process.env.RADBUS_GOOGLE_API_AUTH_SCOPES
