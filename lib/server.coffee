@@ -47,7 +47,7 @@ server.use (req, res, next) ->
   hostPort = req.header('Host')
   host = /^(.+?)(:\d+)?$/.exec(hostPort)[1]
   isSecure = req.isSecure() or (req.headers['x-forwarded-proto'] is 'https')
-  isLocalhost = host is 'localhost'
+  isLocalhost = host is 'localhost' or host is '127.0.0.1'
 
   if not isSecure and not isLocalhost
     res.header 'Location', "https://#{hostPort}#{req.url}"
