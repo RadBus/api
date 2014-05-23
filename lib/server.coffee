@@ -81,7 +81,7 @@ logRequest = (req, res, route, err) ->
   userAgent = req.header('User-Agent') or '-'
 
   console.log "#{LOG_PREFIX}#{xForwardFor} \"#{method} #{url} " +
-              "HTTP/#{httpVersion}\":#{contentType} " +
+              "HTTP/#{httpVersion}\" " +
               "request-id=#{requestId} accept=#{accept} status=#{status} " +
               "#{contentType}:#{contentLength} \"#{userAgent}\""
 
