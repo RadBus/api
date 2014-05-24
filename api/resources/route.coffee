@@ -17,15 +17,18 @@ fetchDetail = (req) ->
   routeId = req.params.routeId
 
   routeData.fetchDetail(routeId)
-    .then (directions) ->
-      if directions.length is 0
-        new restify.ResourceNotFoundError "No such route, dude!"
+    .then (route) ->
+      if route
+        id: route.id
+        description: route.description
+        directions:
+          for direction in route.directions
+            id: direction.id
+            description: direction.description
+            stops:
+              for stop in direction.stops
+                id: stop.id
+                description: stop.description
 
       else
-        for direction in directions
-          id: direction.id
-          description: direction.description
-          stops:
-            for stop in direction.stops
-              id: stop.id
-              description: stop.description
+        new restify.ResourceNotFoundError "No such route, dude!"

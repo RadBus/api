@@ -9,21 +9,37 @@ exports.fetchAll = ->
         description: item.Description
 
 exports.fetchDetail = (routeId) ->
-  nextrip.callApi("Directions/#{routeId}")
-    .then (result) ->
-      directions = for item in result.json
-        direction =
-          id: item.Value
-          description:
-            item.Text.toLowerCase().replace /^(.)/, ($1) -> $1.toUpperCase()
+  descriptionPromise =
+    nextrip.callApi('Routes')
+      .then (result) ->
+        routesById = {}
+        for item in result.json
+          routesById[item.Route] = item.Description
 
-        nextrip.callApi("Stops/#{routeId}/#{direction.id}", direction)
-          .then (result) ->
-            result.state.stops =
-              for item in result.json
-                id: item.Value
-                description: item.Text
+        routesById[routeId]
 
-            result.state
+  directionsPromise =
+    nextrip.callApi("Directions/#{routeId}")
+      .then (result) ->
+        directions = for item in result.json
+          direction =
+            id: item.Value
+            description:
+              item.Text.toLowerCase().replace /^(.)/, ($1) -> $1.toUpperCase()
 
-      Q.all directions
+          nextrip.callApi("Stops/#{routeId}/#{direction.id}", direction)
+            .then (result) ->
+              result.state.stops =
+                for item in result.json
+                  id: item.Value
+                  description: item.Text
+
+              result.state
+
+        Q.all directions
+
+  Q.spread [descriptionPromise, directionsPromise], (description, directions) ->
+    if description
+      id: routeId
+      description: description
+      directions: directions

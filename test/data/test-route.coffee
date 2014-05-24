@@ -7,7 +7,33 @@ proxyquire = require 'proxyquire'
 Q = require 'q'
 
 # stub dependencies
-nextrip = {}
+nextrip =
+  callApi: (url, state) ->
+    Q
+      state: state
+      json:
+        if url is 'Routes'
+          [
+            { Route: '123', Description: 'Route 123 Desciption' },
+            { Route: '456', Description: 'Route 456 Desciption' }
+          ]
+        else if url is 'Directions/123'
+          [
+            { Value: '2', Text: 'EASTBOUND' },
+            { Value: '3', Text: 'WESTBOUND' }
+          ]
+        else if url is 'Stops/123/2'
+          [
+            { Value: 'STP1', Text: 'Stop 1' },
+            { Value: 'STP2', Text: 'Stop 2' }
+          ]
+        else if url is 'Stops/123/3'
+          [
+            { Value: 'STP3', Text: 'Stop 3' },
+            { Value: 'STP4', Text: 'Stop 4' }
+          ]
+        else []
+
 
 # target library under test
 target = proxyquire '../../data/route',
@@ -15,28 +41,7 @@ target = proxyquire '../../data/route',
 
 describe "data/route", ->
   describe "#fetchAll", ->
-    callApiJson = []
-
-    beforeEach ->
-      nextrip.callApi = (url, state) ->
-        Q
-          state: state
-          json: if url is 'Routes' then callApiJson
-
-    afterEach ->
-      callApiJson = []
-
-    it "should return an empty array if there are no routes", ->
-      target.fetchAll()
-        .should.eventually.be.fulfilled
-          .and.be.an('array').that.has.length 0
-
-    it "should return the expected route list if routes exist", ->
-      callApiJson = [
-        { Route: '123', Description: 'Route 123 Desciption' },
-        { Route: '456', Description: 'Route 456 Desciption' }
-      ]
-
+    it "should return the expected route list", ->
       target.fetchAll()
         .should.eventually.be.fulfilled
           .and.be.an('array').that.has.length(2)
@@ -50,39 +55,21 @@ describe "data/route", ->
             route.should.have.property 'description', 'Route 456 Desciption'
 
   describe "#fetchDetail", ->
-    beforeEach ->
-      nextrip.callApi = (url, state) ->
-        Q
-          state: state
-          json:
-            if url is 'Directions/123'
-              [
-                { Value: '2', Text: 'EASTBOUND' },
-                { Value: '3', Text: 'WESTBOUND' }
-              ]
-            else if url is 'Stops/123/2'
-              [
-                { Value: 'STP1', Text: 'Stop 1' },
-                { Value: 'STP2', Text: 'Stop 2' }
-              ]
-            else if url is 'Stops/123/3'
-              [
-                { Value: 'STP3', Text: 'Stop 3' },
-                { Value: 'STP4', Text: 'Stop 4' }
-              ]
-            else []
-
-    it "should return null if the specified route doesn't exist", ->
-      target.fetchDetail '456'
+    it "should return nothing if the specified route doesn't exist", ->
+      target.fetchDetail '789'
         .should.eventually.be.fulfilled
-          .and.be.an('array').that.has.length 0
+          .and.be.empty
 
     it "should return the expected route detail if it exists", ->
       target.fetchDetail '123'
         .should.eventually.be.fulfilled
-          .and.be.an('array').that.has.length(2)
-          .and.then (directions) ->
-            direction = directions[0]
+          .and.be.an('object').then (route) ->
+            route.should.have.property 'id', '123'
+            route.should.have.property 'description', 'Route 123 Desciption'
+            route.should.have.property('directions')
+              .that.is.an('array').that.has.length 2
+
+            direction = route.directions[0]
             direction.should.have.property 'id', '2'
             direction.should.have.property 'description', 'Eastbound'
             direction.should.have.property 'stops'
@@ -94,7 +81,7 @@ describe "data/route", ->
             stop.should.have.property 'id', 'STP2'
             stop.should.have.property 'description', 'Stop 2'
 
-            direction = directions[1]
+            direction = route.directions[1]
             direction.should.have.property 'id', '3'
             direction.should.have.property 'description', 'Westbound'
             direction.should.have.property 'stops'
