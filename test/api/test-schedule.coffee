@@ -119,7 +119,7 @@ describe "GET /schedule", ->
         schedule = res.body
 
         # schedule.should.have.property 'user_display_name', 'Bar User'
-        schedule.should.not.have.property 'missingData'
+        schedule.should.not.have.property 'missing_data'
         schedule.should.have.property('routes')
           .that.is.an('array').with.length 2
 
@@ -194,7 +194,7 @@ describe "GET /schedule", ->
       .then (res) ->
         schedule = res.body
 
-        schedule.should.have.property 'missingData', true
+        schedule.should.have.property 'missing_data', true
 
         route = schedule.routes[0]
         route.should.have.property 'id', '789'
@@ -218,7 +218,7 @@ describe "GET /schedule", ->
       .then (res) ->
         schedule = res.body
 
-        schedule.should.have.property 'missingData', true
+        schedule.should.have.property 'missing_data', true
 
         route = schedule.routes[0]
         route.should.have.property 'id', '123'
@@ -242,7 +242,7 @@ describe "GET /schedule", ->
       .then (res) ->
         schedule = res.body
 
-        schedule.should.have.property 'missingData', true
+        schedule.should.have.property 'missing_data', true
 
         route = schedule.routes[0]
         route.should.have.property 'id', '123'

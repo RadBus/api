@@ -82,6 +82,6 @@ fetch = ->
               checkTime route.pm
 
             if missingData
-              schedule.missingData = true
+              schedule.missing_data = true
 
             schedule
