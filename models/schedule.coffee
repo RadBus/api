@@ -3,12 +3,12 @@ mongoose = require 'mongoose'
 ScheduleSchema = new mongoose.Schema
   googleId: { type: String, index: true }
   routes: [
-    id: Number
+    id: String
     am:
-      direction: Number
+      direction: String
       stops: [String]
     pm:
-      direction: Number
+      direction: String
       stops: [String]
   ]
 
