@@ -9,9 +9,9 @@ exports.register = (server, baseRoute) ->
 
 fetch = ->
   # TODO: get from Google API profile call
-  googleId = 'foo'
+  userId = 'foo'
 
-  schedulePromise = scheduleData.fetch(googleId)
+  schedulePromise = scheduleData.fetch(userId)
     .then (data) ->
       schedule =
         user_display_name: 'Bob User'

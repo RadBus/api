@@ -25,7 +25,7 @@ describe "data/schedule", ->
 
     it "should return an existing schedule document", ->
       Schedule.create [
-        googleId: 'foo'
+        userId: 'foo'
         routes: [
           {
             id: '123'
@@ -51,7 +51,7 @@ describe "data/schedule", ->
         target.fetch 'foo'
 
       .should.eventually.be.fulfilled.then (schedule) ->
-        schedule.should.have.property 'googleId', 'foo'
+        schedule.should.have.property 'userId', 'foo'
         schedule.should.have.property 'routes'
           .that.is.an('array').with.length(2)
         routes = schedule.routes

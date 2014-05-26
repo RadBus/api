@@ -1,7 +1,7 @@
 mongoose = require 'mongoose'
 
 ScheduleSchema = new mongoose.Schema
-  googleId: { type: String, index: true }
+  userId: { type: String, index: true }
   routes: [
     id: String
     am:
