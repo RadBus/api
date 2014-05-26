@@ -77,10 +77,23 @@ routeData =
 
   '@noCallThru': true
 
+userData =
+  fetch: (authToken) ->
+    user =
+      if authToken is 'foo-token'
+        id: 'foo'
+        displayName: 'Foo User'
+      else null
+
+    Q user
+
+  '@noCallThru': true
+
 # build server
 server = helpers.buildServer '../../api/resources/schedule',
   '../../data/schedule': scheduleData
   '../../data/route': routeData
+  '../../data/user': userData
 
 describe "GET /schedule", ->
   beforeEach ->
@@ -107,9 +120,37 @@ describe "GET /schedule", ->
         }
       ]
 
+  it "should return 401 if no Authorization header is passed", ->
+    request(server)
+      .get('/schedule')
+      .json(true)
+      .expect(401)
+      .end()
+
+      .should.eventually.be.fulfilled
+      .then (res) ->
+        error = res.body
+
+        error.message.should.match /Missing Authorization header/
+
+  it "should return 401 if the authentication token is invalid", ->
+    request(server)
+      .get('/schedule')
+      .headers('Authorization': 'bar-token')
+      .json(true)
+      .expect(401)
+      .end()
+
+      .should.eventually.be.fulfilled
+      .then (res) ->
+        error = res.body
+
+        error.message.should.match /Authorization token is invalid or expired/
+
   it "should return 200 with the expected user and route information", ->
     request(server)
       .get('/schedule')
+      .headers('Authorization': 'foo-token')
       .json(true)
       .expect(200)
       .end()
@@ -118,7 +159,7 @@ describe "GET /schedule", ->
       .then (res) ->
         schedule = res.body
 
-        # schedule.should.have.property 'user_display_name', 'Bar User'
+        schedule.should.have.property 'user_display_name', 'Foo User'
         schedule.should.not.have.property 'missing_data'
         schedule.should.have.property('routes')
           .that.is.an('array').with.length 2
@@ -186,6 +227,7 @@ describe "GET /schedule", ->
 
     request(server)
       .get('/schedule')
+      .headers('Authorization': 'foo-token')
       .json(true)
       .expect(200)
       .end()
@@ -210,6 +252,7 @@ describe "GET /schedule", ->
 
     request(server)
       .get('/schedule')
+      .headers('Authorization': 'foo-token')
       .json(true)
       .expect(200)
       .end()
@@ -234,6 +277,7 @@ describe "GET /schedule", ->
 
     request(server)
       .get('/schedule')
+      .headers('Authorization': 'foo-token')
       .json(true)
       .expect(200)
       .end()
