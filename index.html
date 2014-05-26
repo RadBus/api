@@ -259,6 +259,22 @@ Authorization: Bearer &lt;oauth2-token&gt;
 <span class="p">}</span>
 </pre></div>
 
+<p>Sometimes configured schedule information gets outdated.  If a route, direction, or stop is no longer available, the schedule fetch call will return an additional attribute called <code>missing_data</code> which will set to <code>true</code>:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+  <span class="nt">"user_display_name"</span><span class="p">:</span> <span class="s2">"Joe User"</span><span class="p">,</span>
+  <span class="nt">"missing_data"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">"routes"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
+      <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"(unknown route)"</span><span class="p">,</span>
+      <span class="err">...</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
 <h4>
 <a name="add-route-post-v1schedule" class="anchor" href="#add-route-post-v1schedule"><span class="octicon octicon-link"></span></a>Add Route (POST /v1/schedule)</h4>
 
