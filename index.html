@@ -276,7 +276,7 @@ Authorization: Bearer &lt;oauth2-token&gt;
 </pre></div>
 
 <h4>
-<a name="addupdate-route-post-v1schedule" class="anchor" href="#addupdate-route-post-v1schedule"><span class="octicon octicon-link"></span></a>Add/Update Route (POST /v1/schedule)</h4>
+<a name="addupdate-route-post-v1scheduleroutes" class="anchor" href="#addupdate-route-post-v1scheduleroutes"><span class="octicon octicon-link"></span></a>Add/Update Route (POST /v1/schedule/routes)</h4>
 
 <p>Adds or updates a single route to the authenticated user's schedule.</p>
 
@@ -285,7 +285,7 @@ Authorization: Bearer &lt;oauth2-token&gt;
 
 <p>Requires <a href="#authentication">Authentication</a></p>
 
-<pre><code>POST https://api.radbus.io/v1/schedule
+<pre><code>POST https://api.radbus.io/v1/schedule/routes
 Authorization: Bearer &lt;oauth2-token&gt;
 Content-Type: application/json
 </code></pre>
@@ -326,7 +326,7 @@ Content-Type: application/json
 </pre></div>
 
 <h4>
-<a name="remove-route-delete-v1scheduleroute" class="anchor" href="#remove-route-delete-v1scheduleroute"><span class="octicon octicon-link"></span></a>Remove Route (DELETE /v1/schedule/:route)</h4>
+<a name="remove-route-delete-v1scheduleroutesroute" class="anchor" href="#remove-route-delete-v1scheduleroutesroute"><span class="octicon octicon-link"></span></a>Remove Route (DELETE /v1/schedule/routes/:route)</h4>
 
 <p>Removes an existing route from the authenticated user's schedule.</p>
 
@@ -335,7 +335,7 @@ Content-Type: application/json
 
 <p>Requires <a href="#authentication">Authentication</a></p>
 
-<pre><code>DELETE https://api.radbus.io/v1/schedule/4
+<pre><code>DELETE https://api.radbus.io/v1/schedule/routes/4
 Authorization: Bearer &lt;oauth2-token&gt;
 </code></pre>
 
