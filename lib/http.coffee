@@ -21,4 +21,6 @@ createHandler = (action) ->
 exports.get = (server, route, action) ->
   server.get route, createHandler(action)
 
-# TODO: add remaining verb functions as needed (ex: post, put, delete)
+# wire up server object's HTTP POST verb to an action
+exports.post = (server, route, action) ->
+  server.post route, createHandler(action)

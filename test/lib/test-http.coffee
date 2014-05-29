@@ -37,6 +37,30 @@ describe "util/http", ->
     nextValue = null
     nextDeferred = Q.defer()
 
+  assertRegisteredRouteAndHandler = ->
+    registeredRoute.should.be.equal '/foo'
+    expect(registeredHandler).should.not.be.empty
+
+  assertSuccessResultWhenHandlerIsInvoked = ->
+    registeredHandler req, res, next
+
+    nextDeferred.promise.should.eventually.be.fulfilled.then ->
+      sentValue.should.be.equal 'bar'
+      expect(nextValue).to.not.exist
+
+  assertFailureResultWhenHandlerIsInvoked = (errorValue) ->
+    wrappedError = new Error 'VOIP!'
+    error.wrapInternal = (req, inner) ->
+      wrappedError.inner = inner
+      wrappedError
+
+    registeredHandler req, res, next
+
+    nextDeferred.promise.should.eventually.be.fulfilled.then ->
+      expect(sentValue).to.not.exist
+      nextValue.should.be.equal wrappedError
+      nextValue.inner.should.be.equal errorValue
+
   describe "#get()", ->
     beforeEach ->
       server =
@@ -48,33 +72,43 @@ describe "util/http", ->
       action = -> Q()
       target.get server, '/foo', action
 
-      registeredRoute.should.be.equal '/foo'
-      expect(registeredHandler).should.not.be.empty
+      assertRegisteredRouteAndHandler()
 
     describe "registered handler", ->
-
       it "should should send the action value to the HTTP response and call 'next', when invoked with a successful action", ->
         action = -> Q 'bar'
         target.get server, '/foo', action
 
-        registeredHandler req, res, next
-
-        nextDeferred.promise.should.eventually.be.fulfilled.then ->
-          sentValue.should.be.equal 'bar'
-          expect(nextValue).to.not.exist
+        assertSuccessResultWhenHandlerIsInvoked()
 
       it "should call 'next' with a wrapped error, when invoked with a failed action", ->
         action = -> Q.reject('bar')
         target.get server, '/foo', action
 
-        wrappedError = new Error 'VOIP!'
-        error.wrapInternal = (req, inner) ->
-          wrappedError.inner = inner
-          wrappedError
+        assertFailureResultWhenHandlerIsInvoked 'bar'
 
-        registeredHandler req, res, next
+  describe "#post()", ->
+    beforeEach ->
+      server =
+        post: (route, handler) ->
+          registeredRoute = route
+          registeredHandler = handler
 
-        nextDeferred.promise.should.eventually.be.fulfilled.then ->
-          expect(sentValue).to.not.exist
-          nextValue.should.be.equal wrappedError
-          nextValue.inner.should.be.equal 'bar'
+    it "should register an HTTP POST route to a handler", ->
+      action = -> Q()
+      target.post server, '/foo', action
+
+      assertRegisteredRouteAndHandler()
+
+    describe "registered handler", ->
+      it "should should send the action value to the HTTP response and call 'next', when invoked with a successful action", ->
+        action = -> Q 'bar'
+        target.post server, '/foo', action
+
+        assertSuccessResultWhenHandlerIsInvoked()
+
+      it "should call 'next' with a wrapped error, when invoked with a failed action", ->
+        action = -> Q.reject('bar')
+        target.post server, '/foo', action
+
+        assertFailureResultWhenHandlerIsInvoked 'bar'
