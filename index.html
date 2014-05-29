@@ -228,7 +228,7 @@ Authorization: Bearer &lt;oauth2-token&gt;
       <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"4 - New Brighton - Johnson St - Bryant Av - Southtown"</span><span class="p">,</span>
       <span class="nt">"am"</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">"direction"</span><span class="p">:</span> <span class="p">{</span>
-          <span class="nt">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
           <span class="nt">"description"</span><span class="p">:</span> <span class="s2">"Southbound"</span>
         <span class="p">},</span>
         <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span>
@@ -244,7 +244,7 @@ Authorization: Bearer &lt;oauth2-token&gt;
       <span class="p">},</span>
       <span class="nt">"pm"</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">"direction"</span><span class="p">:</span> <span class="p">{</span>
-          <span class="nt">"id"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+          <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
           <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"Northbound"</span>
         <span class="p">},</span>
         <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span>
@@ -276,9 +276,9 @@ Authorization: Bearer &lt;oauth2-token&gt;
 </pre></div>
 
 <h4>
-<a name="add-route-post-v1schedule" class="anchor" href="#add-route-post-v1schedule"><span class="octicon octicon-link"></span></a>Add Route (POST /v1/schedule)</h4>
+<a name="addupdate-route-post-v1schedule" class="anchor" href="#addupdate-route-post-v1schedule"><span class="octicon octicon-link"></span></a>Add/Update Route (POST /v1/schedule)</h4>
 
-<p>Adds a single route to the authenticated user's schedule.</p>
+<p>Adds or updates a single route to the authenticated user's schedule.</p>
 
 <h5>
 <a name="sample-request-5" class="anchor" href="#sample-request-5"><span class="octicon octicon-link"></span></a>Sample Request</h5>
@@ -295,11 +295,11 @@ Content-Type: application/json
 <div class="highlight highlight-json"><pre><span class="p">{</span>
   <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
   <span class="nt">"am"</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">"direction"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">"direction"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
     <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"O81A"</span><span class="p">,</span> <span class="s2">"SLVI"</span><span class="p">]</span>
   <span class="p">},</span>
   <span class="nt">"pm"</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">"direction"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">"direction"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
     <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"7SNI"</span><span class="p">]</span>
   <span class="p">}</span>
 <span class="p">}</span>
