@@ -45,4 +45,4 @@ gulp.task('test', function () {
 });
 
 //The default task (called when you run `gulp`)
-gulp.task('default', ['test', 'jshint']);
+gulp.task('default', ['jshint', 'coffeelint', 'test']);
