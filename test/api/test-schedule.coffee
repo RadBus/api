@@ -88,6 +88,25 @@ routeData =
             ]
           }
         ]
+      else if routeId is '321'
+        id: '321'
+        description: 'Route 321'
+        directions: [
+          {
+            id: '2'
+            description: 'Eastbound'
+            stops: [
+              { id: 'STP1C', description: 'Stop 1-C' }
+            ]
+          },
+          {
+            id: '3'
+            description: 'Westbound'
+            stops: [
+              { id: 'STP2C', description: 'Stop 2-C' }
+            ]
+          }
+        ]
       else null
     Q route
 
@@ -603,3 +622,101 @@ describe "Schedule API resource", ->
               .that.is.an('array').with.length 2
             pm.should.have.deep.property 'stops[0]', 'STP4A'
             pm.should.have.deep.property 'stops[1]', 'STP5A'
+
+  describe "DELETE /schedule/routes/:route", ->
+    beforeEach ->
+      scheduleDocument =
+        _id: 'foo-doc-id'
+        userId: 'foo'
+        routes: [
+          {
+            id: '123'
+            am:
+              direction: '2'
+              stops: ['STP1A', 'STP2A']
+            pm:
+              direction: '3'
+              stops: ['STP5A']
+          },
+          {
+            id: '456'
+            am:
+              direction: '1'
+              stops: ['STP1B']
+            pm:
+              direction: '4'
+              stops: ['STP4B', 'STP5B']
+          },
+          {
+            id: '321'
+            am:
+              direction: '2'
+              stops: ['STP1C']
+            pm:
+              direction: '3'
+              stops: ['STP2C']
+          }
+        ]
+        toObject: ->
+          scheduleDocument.toObjectCalled = true
+          scheduleDocument
+        toObjectCalled: false
+
+    it "should return 401 if the Authorization header is missing", ->
+      r = request(server)
+        .del('/schedule/routes/456')
+
+      assert401WithMissingAuthorizationHeader r
+
+    it "should return 401 if the authentication token is invalid", ->
+      r = request(server)
+        .del('/schedule/routes/456')
+        .headers('Authorization': 'bar-token')
+
+      assert401WithInvalidAuthorizationHeader r
+
+    it "should return 400 with expected validation errors if the specified route doesn't exist in the user's schedule", ->
+      request(server)
+        .del('/schedule/routes/42')
+        .headers('Authorization': 'foo-token')
+        .json(true)
+        .expect(400)
+        .end()
+
+        .should.eventually.be.fulfilled
+          .then (res) ->
+            error = res.body
+
+            error.should.have.property('message')
+              .and.match /Schedule does not contain route 42/
+
+    it "should delete the specified route in the user's schedule", ->
+      didUpsert = false
+      updatedSchedule = null
+
+      scheduleData.upsert = (schedule) ->
+        updatedSchedule = schedule
+        didUpsert = true
+        Q()
+
+      request(server)
+        .del('/schedule/routes/456')
+        .headers('Authorization': 'foo-token')
+        .json(true)
+        .expect(204)
+        .end()
+
+        .should.eventually.be.fulfilled
+          .then ->
+            didUpsert.should.be.true
+
+            updatedSchedule.should.have.property 'toObjectCalled', true
+            updatedSchedule.should.not.have.property '_id'
+
+            updatedSchedule.routes.should.have.length 2
+
+            route = updatedSchedule.routes[0]
+            route.should.have.property 'id', '123'
+
+            route = updatedSchedule.routes[1]
+            route.should.have.property 'id', '321'

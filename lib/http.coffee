@@ -24,3 +24,7 @@ exports.get = (server, route, action) ->
 # wire up server object's HTTP POST verb to an action
 exports.post = (server, route, action) ->
   server.post route, createHandler(action)
+
+# wire up server object's HTTP DELETE verb to an action
+exports.delete = (server, route, action) ->
+  server.del route, createHandler(action)

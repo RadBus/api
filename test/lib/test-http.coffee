@@ -112,3 +112,29 @@ describe "util/http", ->
         target.post server, '/foo', action
 
         assertFailureResultWhenHandlerIsInvoked 'bar'
+
+  describe "#delete()", ->
+    beforeEach ->
+      server =
+        del: (route, handler) ->
+          registeredRoute = route
+          registeredHandler = handler
+
+    it "should register an HTTP DELETE route to a handler", ->
+      action = -> Q()
+      target.delete server, '/foo', action
+
+      assertRegisteredRouteAndHandler()
+
+    describe "registered handler", ->
+      it "should should send the action value to the HTTP response and call 'next', when invoked with a successful action", ->
+        action = -> Q 'bar'
+        target.delete server, '/foo', action
+
+        assertSuccessResultWhenHandlerIsInvoked()
+
+      it "should call 'next' with a wrapped error, when invoked with a failed action", ->
+        action = -> Q.reject('bar')
+        target.delete server, '/foo', action
+
+        assertFailureResultWhenHandlerIsInvoked 'bar'

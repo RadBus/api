@@ -20,6 +20,14 @@ exports.register = (server, baseRoute) ->
           route: req.body
         add userRoute
 
+  http.delete server, "#{baseRoute}/schedule/routes/:route", (req) ->
+    security.getUser(req)
+      .then (user) ->
+        userRouteId =
+          user: user
+          routeId: req.params.route
+        remove userRouteId
+
 getUserSchedule = (user) ->
   scheduleData.fetch(user.id)
     .then (schedule) ->
@@ -180,3 +188,23 @@ add = (userRoute) ->
                   scheduleData.upsert(schedule)
                     .then ->
                       statusCode
+
+remove = (userRouteId) ->
+  getUserSchedule(userRouteId.user)
+    .then (userSchedule) ->
+      schedule = userSchedule.schedule.toObject()
+      delete schedule._id
+
+      existingRouteIndex = _.findIndex schedule.routes,
+        id: userRouteId.routeId
+
+      if existingRouteIndex is -1
+        Q.reject new restify.InvalidContentError(
+          "Schedule does not contain route #{userRouteId.routeId}")
+
+      else
+        schedule.routes.splice existingRouteIndex, 1
+
+        scheduleData.upsert(schedule)
+          .then ->
+            204
