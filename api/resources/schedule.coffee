@@ -134,12 +134,16 @@ add = (userRoute) ->
                     id: section.direction
 
                   if not directionDetail
-                    errors.push "Invalid #{name} section direction: #{section.direction}"
+                    errors.push "Invalid #{name} section " +
+                      "direction: #{section.direction}"
 
                   else
                     stops = section.stops
-                    if not stops or not util.isArray(stops) or not stops.length > 0
-                      errors.push "#{name} section must contain at least one stop"
+                    if not stops or
+                    not util.isArray(stops) or
+                    not stops.length > 0
+                      errors.push "#{name} section must contain " +
+                        "at least one stop"
 
                     else
                       for stop in stops
