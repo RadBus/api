@@ -23,3 +23,26 @@ exports.buildServer = (resourceModulePath, stubs) ->
   resource.register server, ''
 
   server
+
+exports.assert401WithMissingAuthorizationHeader = (request) ->
+  request.json(true)
+    .expect(401)
+    .end()
+
+    .should.eventually.be.fulfilled
+    .then (res) ->
+      error = res.body
+
+      error.message.should.match /Missing Authorization header/
+
+exports.assert401WithInvalidAuthorizationHeader = (request) ->
+  request
+    .json(true)
+    .expect(401)
+    .end()
+
+    .should.eventually.be.fulfilled
+    .then (res) ->
+      error = res.body
+
+      error.message.should.match /Authorization token is invalid or expired/
