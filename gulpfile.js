@@ -32,7 +32,7 @@ gulp.task('test', function () {
     return gulp.src(['test/**/test-*.coffee'], { read: false })
         .pipe(mocha({
             reporter: 'spec',
-            timeout: 2000
+            timeout: 4000
         }))
         .on('end', function () {
             process.exit(0);
