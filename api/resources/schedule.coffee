@@ -198,19 +198,24 @@ add = (userRoute) ->
 remove = (userRouteId) ->
   getUserSchedule(userRouteId.user)
     .then (userSchedule) ->
-      schedule = userSchedule.schedule.toObject()
-      delete schedule._id
-
-      existingRouteIndex = _.findIndex schedule.routes,
-        id: userRouteId.routeId
-
-      if existingRouteIndex is -1
+      if not userSchedule.schedule
         Q.reject new restify.InvalidContentError(
-          "Schedule does not contain route #{userRouteId.routeId}")
+          "User does not yet have a schedule")
 
       else
-        schedule.routes.splice existingRouteIndex, 1
+        schedule = userSchedule.schedule.toObject()
+        delete schedule._id
 
-        scheduleData.upsert(schedule)
-          .then ->
-            204
+        existingRouteIndex = _.findIndex schedule.routes,
+          id: userRouteId.routeId
+
+        if existingRouteIndex is -1
+          Q.reject new restify.InvalidContentError(
+            "Schedule does not contain route #{userRouteId.routeId}")
+
+        else
+          schedule.routes.splice existingRouteIndex, 1
+
+          scheduleData.upsert(schedule)
+            .then ->
+              204

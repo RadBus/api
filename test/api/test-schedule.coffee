@@ -703,6 +703,23 @@ describe "DELETE /schedule/routes/:route", ->
 
     helpers.assert401WithInvalidAuthorizationHeader r
 
+  it "should return 400 with expected validation errors if the user's schedule doesn't exist", ->
+    scheduleDocument = null
+
+    request(server)
+      .del('/schedule/routes/42')
+      .headers('Authorization': 'foo-token')
+      .json(true)
+      .expect(400)
+      .end()
+
+      .should.eventually.be.fulfilled
+        .then (res) ->
+          error = res.body
+
+          error.should.have.property('message')
+            .and.match /User does not yet have a schedule/
+
   it "should return 400 with expected validation errors if the specified route doesn't exist in the user's schedule", ->
     request(server)
       .del('/schedule/routes/42')
