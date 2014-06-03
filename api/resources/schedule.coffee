@@ -171,7 +171,13 @@ add = (userRoute) ->
             else
               getUserSchedule(userRoute.user)
                 .then (userSchedule) ->
-                  schedule = userSchedule.schedule.toObject()
+                  schedule =
+                    if userSchedule.schedule
+                      userSchedule.schedule.toObject()
+                    else
+                      userId: userSchedule.user.id
+                      routes: []
+
                   delete schedule._id
 
                   existingRouteIndex = _.findIndex schedule.routes,

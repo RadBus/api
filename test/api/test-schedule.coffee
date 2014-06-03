@@ -493,6 +493,58 @@ describe "POST /schedule/routes", ->
 
         /Invalid PM section stop: STP4BX/
 
+  it "should return 201 and create a schedule with a new route if the user's schedule did not already exist", ->
+    scheduleDocument = null
+
+    didUpsert = false
+    updatedSchedule = null
+
+    scheduleData.upsert = (schedule) ->
+      updatedSchedule = schedule
+      didUpsert = true
+      Q()
+
+    request(server)
+      .post('/schedule/routes')
+      .json({
+        id: '456'
+        am:
+          direction: '1'
+          stops: ['STP1B']
+        pm:
+          direction: '4'
+          stops: ['STP4B', 'STP5B'],
+      })
+      .headers('Authorization': 'foo-token')
+      .expect(201)
+      .end()
+
+      .should.eventually.be.fulfilled
+        .then ->
+          didUpsert.should.be.true
+
+          updatedSchedule.routes.should.have.length 1
+
+          route = updatedSchedule.routes[0]
+          route.should.have.property 'id', '456'
+
+          route.should.have.property('am')
+            .that.is.an 'object'
+          am = route.am
+          am.should.have.property 'direction', '1'
+          am.should.have.property 'stops'
+            .that.is.an('array').with.length 1
+          am.should.have.deep.property 'stops[0]', 'STP1B'
+
+          route.should.have.property('pm')
+            .that.is.an 'object'
+          pm = route.pm
+          pm.should.have.property 'direction', '4'
+          pm.should.have.property 'stops'
+            .that.is.an('array').with.length 2
+          pm.should.have.deep.property 'stops[0]', 'STP4B'
+          pm.should.have.deep.property 'stops[1]', 'STP5B'
+
   it "should return 201 and add the route to the schedule if the route did not already exist", ->
     didUpsert = false
     updatedSchedule = null
