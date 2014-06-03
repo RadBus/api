@@ -666,7 +666,7 @@ describe "DELETE /schedule/routes/:route", ->
           error.should.have.property('message')
             .and.match /Schedule does not contain route 42/
 
-  it "should delete the specified route in the user's schedule", ->
+  it "should return 204 and delete the specified route in the user's schedule", ->
     didUpsert = false
     updatedSchedule = null
 
