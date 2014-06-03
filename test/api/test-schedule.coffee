@@ -156,7 +156,26 @@ describe "GET /schedule", ->
 
     helpers.assert401WithInvalidAuthorizationHeader r
 
-  it "should return 200 with the expected user and route information", ->
+  it "should return 200 with user information but no route information if the user has no schedule yet", ->
+    scheduleDocument = null
+
+    request(server)
+      .get('/schedule')
+      .json(true)
+      .headers('Authorization': 'foo-token')
+      .expect(200)
+      .end()
+
+      .should.eventually.be.fulfilled
+      .then (res) ->
+        schedule = res.body
+
+        schedule.should.have.property 'user_display_name', 'Foo User'
+        schedule.should.not.have.property 'missing_data'
+        schedule.should.have.property('routes')
+          .that.is.an('array').with.length 0
+
+  it "should return 200 with the expected user and route information if the user has a schedule", ->
     request(server)
       .get('/schedule')
       .json(true)
