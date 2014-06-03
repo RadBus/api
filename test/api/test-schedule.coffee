@@ -143,7 +143,7 @@ describe "GET /schedule", ->
         }
       ]
 
-  it "should return 401 if no Authorization header is missing", ->
+  it "should return 401 if the Authorization header is missing", ->
     r = request(server)
       .get('/schedule')
 
