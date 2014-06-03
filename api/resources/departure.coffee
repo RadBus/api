@@ -1,47 +1,94 @@
+Q = require 'q'
 restify = require 'restify'
 moment = require 'moment-timezone'
+_ = require 'lodash'
+http = require '../../lib/http'
+security = require '../../lib/security'
+scheduleData = require '../../data/schedule'
+routeData = require '../../data/route'
+departureData = require '../../data/departure'
 
 exports.register = (server, baseRoute) ->
-  server.get "#{baseRoute}/departures", get
-  server.get "#{baseRoute}/departures/:routeFilter", get
+  http.get server, "#{baseRoute}/departures", (req) ->
+    security.getUser(req)
+      .then fetch
 
-get = (req, res, next) ->
-  if not req.header 'Authorization'
-    res.send new restify.InvalidCredentialsError "Not so fast."
+fetch = (user) ->
+  # determine if it's AM or PM
+  now = moment()
+  noon = moment(now).tz(process.env.RADBUS_TIMEZONE)
+    .startOf('day')
+    .add 'hours', 12
+  isMorning = now.isBefore noon
 
-  else
-    now = moment()
+  # determine how far into the future to return departures
+  cutOff = moment(now).add 'minutes',
+    parseInt(process.env.RADBUS_FUTURE_MINUTES)
 
-    departures270 =
-      for index in [0..4]
-        time: moment(now).add('minutes', (index * 5))
-        route:
-          number: 270
-          terminal: 'C'
-        stop:
-          id: 'MPWD'
-          name: 'Maplewood Mall Transit Center'
+  # fetch the user's schedule and get departure data
+  scheduleData.fetch(user.id)
+    .then (schedule) ->
 
-    departures264 =
-      for index in [0..2]
-        time: moment(now).add('minutes', (index * 10))
-        route:
-          number: 264
-          terminal: if index % 2 then 'A'
-        stop:
-          id: 'CCPR'
-          name: 'I-35W and County Rd C Park & Ride'
+      # build array of inputs for departure queries
+      departureInputs = []
+      for route in schedule.routes
+        section = if isMorning then route.am else route.pm
+        for stop in section.stops
+          input =
+            routeId: route.id
+            directionId: section.direction
+            stopId: stop
 
-    departures = departures270.concat departures264
+          departureInputs.push input
 
-    routeFilter = req.params.routeFilter
-    if routeFilter
-      departures = departures.filter (d) ->
-        d.route.number.toString() is routeFilter
+      # get departures
+      departurePromises = for input in departureInputs
+        departureData.fetch input.routeId, input.directionId, input.stopId
 
-    departures.sort (a, b) ->
-      if a.time.isAfter(b.time) then 1 else -1
+      # get route details (for stop descriptions)
+      routeDetailPromises = for route in schedule.routes
+        routeData.fetchDetail route.id
 
-    res.send departures
+      # wait for all departures and route details to come back
+      Q.spread [Q.all(departurePromises), Q.all(routeDetailPromises)],
+        (departureResults, routeDetailResults) ->
 
-  next()
+          getStopDescription = (routeId, directionId, stopId) ->
+            route = _.find routeDetailResults,
+              id: routeId
+            direction = _.find route.directions,
+              id: directionId
+            stop = _.find direction.stops,
+              id: stopId
+
+            stop.description
+
+          # build final response
+          departureDetails = []
+
+          for result, i in departureResults
+            # get corresponding input
+            input = departureInputs[i]
+
+            for departure in result
+              # filter out departures too far into the future
+              if not departure.time.isAfter(cutOff)
+                departureDetail =
+                  time: departure.time
+                  route:
+                    id: departure.routeId
+                    terminal: departure.terminal
+                  stop:
+                    id: input.stopId
+                    description:
+                      getStopDescription departure.routeId,
+                        input.directionId,
+                        input.stopId
+                    gate: departure.gate
+                  location: departure.location
+
+                departureDetails.push departureDetail
+
+          # return list, sorted by departure time
+          departureDetails.sort (a, b) ->
+            if a.time.isAfter(b.time) then 1 else -1
