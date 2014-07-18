@@ -48,7 +48,13 @@
 
 <p>To use a request that requires authentication you must pass an <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.8">Authorization</a> HTTP header with a <code>Bearer</code> token obtained by a supported OAuth2 provider.  Currently the RadBus API only supports OAuth2 tokens generated from Google ID's, which you can learn more about <a href="https://developers.google.com/accounts/docs/OAuth2">here</a>.</p>
 
-<p>When obtaining your OAuth2 token, one of the inputs is called <strong>scopes</strong>.  RadBus requires a specific scopes value in order to access the correct user information so their schedule can be looked up.  The client should call the <a href="#oauth2-scopes-resource">OAuth2 Scopes</a> resource to obtain the correct scopes value.</p>
+<p>When obtaining your OAuth2 token from Google, you will be required to provide three pieces of information that link the token to the RadBus API and the type of access the API requires on behalf of the user:</p>
+
+<ul>
+<li>RadBus Web API's Google Client ID</li>
+<li>RadBus Web API's Google Client Secret</li>
+<li>OAuth2 Scopes value</li>
+</ul><p>To obtain these values, the client should call the <a href="#oauth2-resource">OAuth2</a> resource.</p>
 
 <h4>
 <a name="authentication-failure-responses" class="anchor" href="#authentication-failure-responses"><span class="octicon octicon-link"></span></a>Authentication Failure Responses</h4>
@@ -88,17 +94,17 @@
 </pre></div>
 
 <h3>
-<a name="oauth2-scopes-resource" class="anchor" href="#oauth2-scopes-resource"><span class="octicon octicon-link"></span></a>OAuth2 Scopes Resource</h3>
+<a name="oauth2-resource" class="anchor" href="#oauth2-resource"><span class="octicon octicon-link"></span></a>OAuth2 Resource</h3>
 
-<p>The OAuth2 scopes value required by the RadBus API for all authenticated endpoints.</p>
+<p>OAuth2 information required by the Google API for clients to generate authorization tokens that can be used with the RadBus API.</p>
 
 <h4>
-<a name="fetch-get-v1oauth2-scopes" class="anchor" href="#fetch-get-v1oauth2-scopes"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/oauth2-scopes)</h4>
+<a name="fetch-get-v1oauth2" class="anchor" href="#fetch-get-v1oauth2"><span class="octicon octicon-link"></span></a>Fetch (GET /v1/oauth2)</h4>
 
 <h5>
 <a name="sample-request-1" class="anchor" href="#sample-request-1"><span class="octicon octicon-link"></span></a>Sample Request</h5>
 
-<pre><code>GET https://api.radbus.io/v1/oauth2-scopes
+<pre><code>GET https://api.radbus.io/v1/oauth2
 </code></pre>
 
 <h5>
@@ -106,7 +112,11 @@
 
 <p><code>200 OK</code></p>
 
-<div class="highlight highlight-json"><pre><span class="s2">"scope1 scope2"</span>
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+  <span class="nt">"client_id"</span><span class="p">:</span> <span class="s2">"radbus-api-google-client-id"</span><span class="p">,</span>
+  <span class="nt">"client_secret"</span><span class="p">:</span> <span class="s2">"radbus-api-google-client-secret"</span><span class="p">,</span>
+  <span class="nt">"scopes"</span><span class="p">:</span> <span class="s2">"radbus-api-oauth2-scopes"</span>
+<span class="p">}</span>
 </pre></div>
 
 <h3>
