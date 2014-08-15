@@ -8,6 +8,7 @@ var LOG_PREFIX = 'APP: ';
 
 // capabilities
 require('./api').register(server);
+require('./web').register(server);
 
 // open the database connection
 db.open()
