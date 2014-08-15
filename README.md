@@ -6,8 +6,8 @@ You've found the source code for the RadBus Web API!  This API enables applicati
 
 If you're developing an app or service and would like more information on how to call the API, please visit the [REST API Documentation](http://dev.radbus.io/) site.
 
-Please check out these important wiki pages for more information on the project and how to get involevd:
+Please check out these important wiki pages for more information on the project and how to get involved:
 * [Roadmap](https://github.com/TargetRAD/radbus-api/wiki/Roadmap)
 * [Known Clients](https://github.com/TargetRAD/radbus-api/wiki/Known-Clients)
-* [RadBus Data Sources] (https://github.com/TargetRAD/radbus-api/wiki/RadBus-Data-Sources)
+* [RadBus Data Sources](https://github.com/TargetRAD/radbus-api/wiki/RadBus-Data-Sources)
 * [Contribution Guidelines](https://github.com/TargetRAD/radbus-api/wiki/Contribution-Guidelines)
