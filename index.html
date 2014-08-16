@@ -37,7 +37,56 @@
 
 <p>The following documentation can be used by developers to understand how to properly call the RadBus API.</p>
 
-<h2>
+<p><a href="version-1-api">Version 1 API</a></p>
+
+<ul>
+<li>
+<a href="authentication">Authentication</a>
+
+<ul>
+<li><a href="creating-an-oauth2-token">Creating an OAuth2 Token</a></li>
+<li><a href="authentication-failure-responses">Authentication Failure Responses</a></li>
+</ul>
+</li>
+<li>Root Resource 
+
+<ul>
+<li>Fetch (GET /v1)</li>
+</ul>
+</li>
+<li>OAuth2 Resource
+
+<ul>
+<li>Fetch (GET /v1/oauth2)</li>
+</ul>
+</li>
+<li>Route List Resource
+
+<ul>
+<li>Fetch (GET /v1/routes)</li>
+</ul>
+</li>
+<li>Route Details Resource
+
+<ul>
+<li>Fetch (GET /v1/routes/:route)</li>
+</ul>
+</li>
+<li>Schedule Resource
+
+<ul>
+<li>Fetch (GET /v1/schedule)</li>
+<li>Add/Update Route (POST /v1/schedule/routes)</li>
+<li>Remove Route (DELETE /v1/schedule/routes/:route)</li>
+</ul>
+</li>
+<li>Departures Resource
+
+<ul>
+<li>Fetch (GET /v1/departures)</li>
+</ul>
+</li>
+</ul><h2>
 <a name="version-1-api" class="anchor" href="#version-1-api"><span class="octicon octicon-link"></span></a>Version 1 API</h2>
 
 <h3>
