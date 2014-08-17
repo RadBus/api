@@ -62,30 +62,22 @@ fetch = (user) ->
                 pmDirection = _.find routeDetail?.directions,
                   id: route.pm.direction
 
+                renderTime = (time, timeDirection) ->
+                  direction:
+                    id: time.direction
+                    description: timeDirection?.description
+                  stops:
+                    for stopId in time.stops
+                      stopDetail = _.find timeDirection?.stops,
+                        id: stopId
+
+                      id: stopId
+                      description: stopDetail?.description
+
                 id: route.id
                 description: routeDetail?.description
-                am:
-                  direction:
-                    id: route.am.direction
-                    description: amDirection?.description
-                  stops:
-                    for stopId in route.am.stops
-                      stopDetail = _.find amDirection?.stops,
-                        id: stopId
-
-                      id: stopId
-                      description: stopDetail?.description
-                pm:
-                  direction:
-                    id: route.pm.direction
-                    description: pmDirection?.description
-                  stops:
-                    for stopId in route.pm.stops
-                      stopDetail = _.find pmDirection?.stops,
-                        id: stopId
-
-                      id: stopId
-                      description: stopDetail?.description
+                am: renderTime route.am, amDirection
+                pm: renderTime route.pm, pmDirection
 
             # detect if there was missing data
             missingData = false
