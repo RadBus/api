@@ -360,13 +360,13 @@ Authorization: Bearer &lt;oauth2-token&gt;
 Content-Type: application/json
 </code></pre>
 
-<p>The request body needs to contain a route ID and both AM and PM direction/stops:</p>
+<p>The request body needs to contain a route ID and both AM and PM sections, each with a direction and one or more stops:</p>
 
 <div class="highlight highlight-json"><pre><span class="p">{</span>
   <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
   <span class="nt">"am"</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">"direction"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
-    <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"O81A"</span><span class="p">,</span> <span class="s2">"SLVI"</span><span class="p">]</span>
+    <span class="nt">"stops"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"O81A"</span><span class="p">,</span> <span class="s2">"SLVI"</span><span class="p">,</span> <span class="mi">15893</span><span class="p">]</span>
   <span class="p">},</span>
   <span class="nt">"pm"</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">"direction"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
@@ -375,8 +375,28 @@ Content-Type: application/json
 <span class="p">}</span>
 </pre></div>
 
-<p>Allowable route ID's can be obtained via the <a href="#route-list-resource">Route List Resource</a>.
-Allowable direction ID's and stop codes for a specific route can be obtained via the <a href="#route-details-resource">Route Details Resource</a>.</p>
+<h6>
+<a name="route-ids" class="anchor" href="#route-ids"><span class="octicon octicon-link"></span></a>Route ID's</h6>
+
+<p>Allowable route ID's can be obtained via the <a href="#route-list-resource">Route List Resource</a>.</p>
+
+<h6>
+<a name="direction-ids" class="anchor" href="#direction-ids"><span class="octicon octicon-link"></span></a>Direction ID's</h6>
+
+<p>Allowable direction ID's for a specific route can be obtained via the <a href="#route-details-resource">Route Details Resource</a>.</p>
+
+<h6>
+<a name="stop-ids" class="anchor" href="#stop-ids"><span class="octicon octicon-link"></span></a>Stop ID's</h6>
+
+<p>Allowable stop ID's for a specific route can also be obtained via the <a href="#route-details-resource">Route Details Resource</a>.  However, the stop ID's returned by that resource don't cover <em>all</em> of the actual stops for each route, only the key stops listed for a given route in NexTrip.  This is due to a current limitation of the API since it's using NexTrip itself to get all route information.  This shortcoming will be resolved in the near future when the RadBus API starts using the <a href="http://transitdata.io">Transit Data API</a> for route information instead of NexTrip (see the <a href="https://github.com/TargetRAD/radbus-api/wiki/Roadmap#medium-term-3-6-months">Roadmap</a> for more information).</p>
+
+<p><strong>COMING SOON</strong>:</p>
+
+<blockquote>
+<p>The good news is the API will <em>also</em> accept actual Metro Transit Stop ID's, which do represent every stop in a route.  These stop ID's are the true identifier of a stop and are what Metro Transit uses in it's <a href="http://datafinder.org/metadata/transit_schedule_google_feed.html">GTFS feed</a>.  The API tells the difference by the JSON data type of the stop ID.  If you pass a string (example: <code>"081A"</code>) then the API will assume its a NexTrip stop code and will actually validate the code against the stops returned by the <a href="#route-details-resource">Route Details Resource</a>.  However, if you pass an integer (example: <code>15893</code>), the API will assume its a Metro Transit Stop ID and, since it currently has no mechanism to validate it, it will use it as is when getting departure times.</p>
+
+<p>While the API has no programatic way today to present Metro Transit Stop ID's, end users can obtain them easily via the <a href="http://www.metrotransit.org/planner/servicesfinder.aspx">Services Finder</a> and <a href="http://www.metrotransit.org/imap/map.aspx">Interactive Map</a> web pages.</p>
+</blockquote>
 
 <h5>
 <a name="sample-success-responses" class="anchor" href="#sample-success-responses"><span class="octicon octicon-link"></span></a>Sample Success Responses</h5>
