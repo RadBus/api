@@ -14,36 +14,67 @@ target = proxyquire '../../data/departure',
   './nextrip': nextrip
 
 describe "data/departure", ->
+  beforeEach ->
+    process.env.RADBUS_TIMEZONE = 'America/Chicago'
+
+    nextrip.callApi = (url, state) ->
+      Q
+        state: state
+        json:
+          if url is '123/2/STP1'
+            [
+              {
+                DepartureTime: '/Date(1400874180000-0500)/'
+                Route: '123'
+                Terminal: 'A'
+                VehicleLatitude: -100
+                VehicleLongitude: 100
+              },
+              {
+                DepartureTime: '/Date(1400875980000-0500)/'
+                Route: '123'
+                Gate: 'X'
+                VehicleLatitude: 0
+                VehicleLongitude: 0
+              }
+            ]
+          else if url is '42'
+            [
+              {
+                DepartureTime: '/Date(1400874180000-0500)/'
+                Route: '123'
+                Terminal: 'A'
+                VehicleLatitude: -100
+                VehicleLongitude: 100
+              },
+              {
+                DepartureTime: '/Date(1400874180000-0500)/'
+                Route: '321'
+                Gate: 'B'
+                VehicleLatitude: -150
+                VehicleLongitude: 150
+              },
+              {
+                DepartureTime: '/Date(1400875980000-0500)/'
+                Route: '123'
+                Gate: 'X'
+                VehicleLatitude: 0
+                VehicleLongitude: 0
+              },
+              {
+                DepartureTime: '/Date(1400875980000-0500)/'
+                Route: '321'
+                Gate: 'Y'
+                VehicleLatitude: 0
+                VehicleLongitude: 0
+              }
+            ]
+          else []
+
+    afterEach ->
+      delete process.env.RADBUS_TIMEZONE
+
   describe "#fetchByRouteDirectionAndStop", ->
-    beforeEach ->
-      process.env.RADBUS_TIMEZONE = 'America/Chicago'
-
-      nextrip.callApi = (url, state) ->
-        Q
-          state: state
-          json:
-            if url is '123/2/STP1'
-              [
-                {
-                  DepartureTime: '/Date(1400874180000-0500)/'
-                  Route: '123'
-                  Terminal: 'A'
-                  VehicleLatitude: -100
-                  VehicleLongitude: 100
-                },
-                {
-                  DepartureTime: '/Date(1400875980000-0500)/'
-                  Route: '123'
-                  Gate: 'X'
-                  VehicleLatitude: 0
-                  VehicleLongitude: 0
-                }
-              ]
-            else []
-
-      afterEach ->
-        delete process.env.RADBUS_TIMEZONE
-
     it "should return nothing if the specified route/direction/stop has no data", ->
       target.fetchByRouteDirectionAndStop '123', '2', 'OTHER-STOP'
         .should.eventually.be.fulfilled
@@ -54,6 +85,37 @@ describe "data/departure", ->
         .should.eventually.be.fulfilled
           .and.be.an('array').that.has.length(2)
           .and.then (departures) ->
+            departure = departures[0]
+            departure.should.have.deep.property 'time'
+            departure.time.format().should.equal '2014-05-23T14:43:00-05:00'
+            departure.should.have.property 'routeId', '123'
+            departure.should.have.property 'terminal', 'A'
+            departure.should.not.have.property 'gate'
+            departure.should.have.deep.property 'location.lat', -100
+            departure.should.have.deep.property 'location.long', 100
+
+            departure = departures[1]
+            departure.should.have.property 'time'
+            departure.time.format().should.equal '2014-05-23T15:13:00-05:00'
+            departure.should.have.property 'routeId', '123'
+            departure.should.not.have.property 'terminal'
+            departure.should.have.property 'gate', 'X'
+            departure.should.not.have.property 'location'
+
+  describe "#fetchByRouteAndMtStopId", ->
+    it "should return nothing if the specified route/stop has no data", ->
+      target.fetchByRouteAndMtStopId '123', '43'
+        .should.eventually.be.fulfilled
+          .and.be.an('array').that.has.length 0
+
+    it "should return the expected route detail if it exists", ->
+      target.fetchByRouteAndMtStopId '123', '42'
+        .should.eventually.be.fulfilled
+          .and.be.an('array').that.has.length(2)
+          .and.then (departures) ->
+
+            # assert that other routes are filtered out
+
             departure = departures[0]
             departure.should.have.deep.property 'time'
             departure.time.format().should.equal '2014-05-23T14:43:00-05:00'
