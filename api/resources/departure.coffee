@@ -44,7 +44,11 @@ fetch = (user) ->
 
       # get departures
       departurePromises = for input in departureInputs
-        departureData.fetchByRouteDirectionAndStop input.routeId, input.directionId, input.stopId
+        mtStop = helpers.parseMetroTransitStop input.stopId
+        if mtStop
+          departureData.fetchByRouteAndMtStopId input.routeId, mtStop.id
+        else
+          departureData.fetchByRouteDirectionAndStop input.routeId, input.directionId, input.stopId
 
       # get route details (for stop descriptions)
       routeDetailPromises = for route in schedule.routes
@@ -74,17 +78,26 @@ fetch = (user) ->
             for departure in result
               # filter out departures too far into the future
               if not departure.time.isAfter(cutOff)
+                mtStop = helpers.parseMetroTransitStop input.stopId
+
                 departureDetail =
                   time: departure.time
                   route:
                     id: departure.routeId
                     terminal: departure.terminal
                   stop:
-                    id: input.stopId
-                    description:
-                      getStopDescription departure.routeId,
-                        input.directionId,
+                    id:
+                      if mtStop
+                        mtStop.id
+                      else
                         input.stopId
+                    description:
+                      if mtStop
+                        mtStop.description
+                      else
+                        getStopDescription departure.routeId,
+                          input.directionId,
+                          input.stopId
                     gate: departure.gate
                   location: departure.location
 

@@ -35,7 +35,7 @@ scheduleData =
             id: '123'
             am:
               direction: '2'
-              stops: ['STP1A', 'STP2A']
+              stops: ['STP1A', 'STP2A', '42:foo stop']
             pm:
               direction: '3'
               stops: ['STP5A']
@@ -276,6 +276,35 @@ describe "GET /departures", ->
 
       Q departures
 
+    departureData.fetchByRouteAndMtStopId = (routeId, stopId) ->
+      departures =
+        if stopId is '42' and routeId is '123'
+          [
+            {
+              routeId: '123'
+              time: moment '2014-05-01T07:06-05:00'
+              terminal: 'A'
+              location:
+                lat: -42
+                long: 24
+            },
+            {
+              routeId: '123'
+              time: moment '2014-05-01T07:36-05:00'
+            },
+            # this departure should not be returned
+            # since it's too far into the future
+            {
+              routeId: '123'
+              time: moment '2014-05-01T08:21-05:00'
+            }
+          ]
+
+      if not departures
+        departures = []
+
+      Q departures
+
     request(server)
       .get('/departures')
       .json(true)
@@ -287,7 +316,7 @@ describe "GET /departures", ->
         .then (res) ->
           departures = res.body
           departures.should.be.an('array')
-            .with.length 6
+            .with.length 8
 
           # expect only the AM departures, in time order, for the next hour only
           index = 0
@@ -310,6 +339,18 @@ describe "GET /departures", ->
           departure.should.have.deep.property 'route.terminal', 'A'
           departure.should.have.deep.property 'stop.id', 'STP2A'
           departure.should.have.deep.property 'stop.description', 'Stop 2-A'
+          departure.should.not.have.deep.property 'stop.gate'
+          departure.should.have.deep.property 'location.lat', -42
+          departure.should.have.deep.property 'location.long', 24
+
+          # stop from MT Stop ID
+          departure = departures[index++]
+          moment(departure.time).isSame('2014-05-01T07:06-05:00')
+            .should.be.true
+          departure.should.have.deep.property 'route.id', '123'
+          departure.should.have.deep.property 'route.terminal', 'A'
+          departure.should.have.deep.property 'stop.id', '42'
+          departure.should.have.deep.property 'stop.description', 'foo stop'
           departure.should.not.have.deep.property 'stop.gate'
           departure.should.have.deep.property 'location.lat', -42
           departure.should.have.deep.property 'location.long', 24
@@ -342,6 +383,17 @@ describe "GET /departures", ->
           departure.should.not.have.deep.property 'route.terminal'
           departure.should.have.deep.property 'stop.id', 'STP2A'
           departure.should.have.deep.property 'stop.description', 'Stop 2-A'
+          departure.should.not.have.deep.property 'stop.gate'
+          departure.should.not.have.property 'location'
+
+          # stop from MT Stop ID
+          departure = departures[index++]
+          moment(departure.time).isSame('2014-05-01T07:36-05:00')
+            .should.be.true
+          departure.should.have.deep.property 'route.id', '123'
+          departure.should.not.have.deep.property 'route.terminal'
+          departure.should.have.deep.property 'stop.id', '42'
+          departure.should.have.deep.property 'stop.description', 'foo stop'
           departure.should.not.have.deep.property 'stop.gate'
           departure.should.not.have.property 'location'
 
