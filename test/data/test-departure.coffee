@@ -14,7 +14,7 @@ target = proxyquire '../../data/departure',
   './nextrip': nextrip
 
 describe "data/departure", ->
-  describe "#fetch", ->
+  describe "#fetchByRouteDirectionAndStop", ->
     beforeEach ->
       process.env.RADBUS_TIMEZONE = 'America/Chicago'
 
@@ -45,12 +45,12 @@ describe "data/departure", ->
         delete process.env.RADBUS_TIMEZONE
 
     it "should return nothing if the specified route/direction/stop has no data", ->
-      target.fetch '123', '2', 'OTHER-STOP'
+      target.fetchByRouteDirectionAndStop '123', '2', 'OTHER-STOP'
         .should.eventually.be.fulfilled
           .and.be.an('array').that.has.length 0
 
     it "should return the expected route detail if it exists", ->
-      target.fetch '123', '2', 'STP1'
+      target.fetchByRouteDirectionAndStop '123', '2', 'STP1'
         .should.eventually.be.fulfilled
           .and.be.an('array').that.has.length(2)
           .and.then (departures) ->

@@ -166,7 +166,7 @@ describe "GET /departures", ->
     nowMoment = moment('2014-05-01T07:00-05:00')
 
     # mock departures that return at 7AM
-    departureData.fetch = (routeId, directionId, stopId) ->
+    departureData.fetchByRouteDirectionAndStop = (routeId, directionId, stopId) ->
       departures =
         if routeId is '123'
           # AM departures
@@ -360,7 +360,7 @@ describe "GET /departures", ->
     nowMoment = moment('2014-05-01T15:00-05:00')
 
     # mock departures that return at 4PM
-    departureData.fetch = (routeId, directionId, stopId) ->
+    departureData.fetchByRouteDirectionAndStop = (routeId, directionId, stopId) ->
       departures =
         if routeId is '123'
           # AM departures

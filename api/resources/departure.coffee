@@ -44,7 +44,7 @@ fetch = (user) ->
 
       # get departures
       departurePromises = for input in departureInputs
-        departureData.fetch input.routeId, input.directionId, input.stopId
+        departureData.fetchByRouteDirectionAndStop input.routeId, input.directionId, input.stopId
 
       # get route details (for stop descriptions)
       routeDetailPromises = for route in schedule.routes

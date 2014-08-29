@@ -1,7 +1,7 @@
 nextrip = require './nextrip'
 moment = require 'moment-timezone'
 
-exports.fetch = (routeId, directionId, stopId) ->
+exports.fetchByRouteDirectionAndStop = (routeId, directionId, stopId) ->
   nextrip.callApi("#{routeId}/#{directionId}/#{stopId}")
     .then (result) ->
       for item in result.json
