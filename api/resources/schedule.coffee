@@ -2,6 +2,7 @@ _ = require 'lodash'
 Q = require 'q'
 restify = require 'restify'
 util = require 'util'
+helpers = require './helpers'
 http = require '../../lib/http'
 security = require '../../lib/security'
 scheduleData = require '../../data/schedule'
@@ -33,12 +34,6 @@ getUserSchedule = (user) ->
     .then (schedule) ->
       user: user
       schedule: schedule
-
-parseMetroTransitStop = (stop) ->
-  matches = /^(\d+):(.*)$/.exec stop
-  if matches
-    id: matches[1],
-    description: matches[2]
 
 fetch = (user) ->
   getUserSchedule(user)
@@ -74,7 +69,7 @@ fetch = (user) ->
                     description: timeDirection?.description
                   stops:
                     for stopId in time.stops
-                      mtStop = parseMetroTransitStop stopId
+                      mtStop = helpers.parseMetroTransitStop stopId
                       if mtStop
                         mtStop
                       else
@@ -157,7 +152,7 @@ add = (userRoute) ->
 
                     else
                       for stopId in stops
-                        mtStop = parseMetroTransitStop stopId
+                        mtStop = helpers.parseMetroTransitStop stopId
                         if not mtStop
                           stopDetail = _.find directionDetail.stops,
                             id: stopId
