@@ -34,6 +34,12 @@ getUserSchedule = (user) ->
       user: user
       schedule: schedule
 
+parseMetroTransitStop = (stop) ->
+  matches = /^(\d+):(.*)$/.exec stop
+  if matches
+    id: matches[1],
+    description: matches[2]
+
 fetch = (user) ->
   getUserSchedule(user)
     .then (userSchedule) ->
@@ -68,11 +74,15 @@ fetch = (user) ->
                     description: timeDirection?.description
                   stops:
                     for stopId in time.stops
-                      stopDetail = _.find timeDirection?.stops,
-                        id: stopId
+                      mtStop = parseMetroTransitStop stopId
+                      if mtStop
+                        mtStop
+                      else
+                        stopDetail = _.find timeDirection?.stops,
+                          id: stopId
 
-                      id: stopId
-                      description: stopDetail?.description
+                        id: stopId
+                        description: stopDetail?.description
 
                 id: route.id
                 description: routeDetail?.description
@@ -146,12 +156,14 @@ add = (userRoute) ->
                         "at least one stop"
 
                     else
-                      for stop in stops
-                        stopDetail = _.find directionDetail.stops,
-                          id: stop
+                      for stopId in stops
+                        mtStop = parseMetroTransitStop stopId
+                        if not mtStop
+                          stopDetail = _.find directionDetail.stops,
+                            id: stopId
 
-                        if not stopDetail
-                          errors.push "Invalid #{name} section stop: #{stop}"
+                          if not stopDetail
+                            errors.push "Invalid #{name} section stop: #{stopId}"
 
             errors = []
             validateSection route.am, 'AM'

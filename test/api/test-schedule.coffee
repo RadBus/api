@@ -127,7 +127,7 @@ describe "GET /schedule", ->
           id: '123'
           am:
             direction: '2'
-            stops: ['STP1A', 'STP2A']
+            stops: ['STP1A', 'STP2A', '1234:foo stop']
           pm:
             direction: '3'
             stops: ['STP5A']
@@ -201,7 +201,7 @@ describe "GET /schedule", ->
         am.should.have.deep.property 'direction.id', '2'
         am.should.have.deep.property 'direction.description', 'Eastbound'
         am.should.have.property('stops')
-          .that.is.an('array').with.length 2
+          .that.is.an('array').with.length 3
         stops = am.stops
         stop = stops[0]
         stop.should.have.property 'id', 'STP1A'
@@ -209,6 +209,9 @@ describe "GET /schedule", ->
         stop = stops[1]
         stop.should.have.property 'id', 'STP2A'
         stop.should.have.property 'description', 'Stop 2-A'
+        stop = stops[2]
+        stop.should.have.property 'id', '1234'
+        stop.should.have.property 'description', 'foo stop'
         route.should.have.property('pm')
           .that.is.an('object')
         pm = route.pm
@@ -579,7 +582,7 @@ describe "POST /schedule/routes", ->
         id: '456'
         am:
           direction: '1'
-          stops: ['STP1B']
+          stops: ['STP1B', '1234:foo stop']
         pm:
           direction: '4'
           stops: ['STP4B', 'STP5B'],
@@ -605,8 +608,9 @@ describe "POST /schedule/routes", ->
           am = route.am
           am.should.have.property 'direction', '1'
           am.should.have.property 'stops'
-            .that.is.an('array').with.length 1
+            .that.is.an('array').with.length 2
           am.should.have.deep.property 'stops[0]', 'STP1B'
+          am.should.have.deep.property 'stops[1]', '1234:foo stop'
 
           route.should.have.property('pm')
             .that.is.an 'object'
