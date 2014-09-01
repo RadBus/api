@@ -32,7 +32,8 @@ fetch = (user) ->
 
       # build array of inputs for departure queries
       departureInputs = []
-      for route in schedule.routes
+      routes = if schedule != null then schedule.routes else []
+      for route in routes
         section = if isMorning then route.am else route.pm
         for stop in section.stops
           input =
@@ -51,7 +52,7 @@ fetch = (user) ->
           departureData.fetchByRouteDirectionAndStop input.routeId, input.directionId, input.stopId
 
       # get route details (for stop descriptions)
-      routeDetailPromises = for route in schedule.routes
+      routeDetailPromises = for route in routes
         routeData.fetchDetail route.id
 
       # wait for all departures and route details to come back

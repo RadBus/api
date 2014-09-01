@@ -546,3 +546,21 @@ describe "GET /departures", ->
           departure.should.have.deep.property 'route.id', '456'
           departure.should.have.deep.property 'stop.id', 'STP5B'
           departure.should.have.deep.property 'stop.description', 'Stop 5-B'
+
+  it "should return 200 with an empty list when no departures exist", ->
+
+    departureData.fetchByRouteDirectionAndStop = (routeId, directionId, stopId) ->
+      departures = []
+
+    request(server)
+      .get('/departures')
+      .json(true)
+      .headers('Authorization': 'foo-token')
+      .expect(200)
+      .end()
+
+      .should.eventually.be.fulfilled
+        .then (res) ->
+          departures = res.body
+          departures.should.be.an('array')
+            .with.length 0
