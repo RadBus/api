@@ -11,87 +11,19 @@ moment = require 'moment-timezone'
 
 # stub dependencies
 userData =
-  fetch: (authToken) ->
-    user =
-      if authToken is 'foo-token'
-        id: 'foo'
-        displayName: 'Foo User'
-      else null
-
-    Q user
-
   '@noCallThru': true
-
-security = proxyquire '../../lib/security',
-  '../data/user': userData
 
 scheduleData =
   '@noCallThru': true
 
 routeData =
-  fetchDetail: (routeId) ->
-    route =
-      if routeId is '123'
-        id: '123'
-        description: 'Route 123'
-        directions: [
-          {
-            id: '2'
-            description: 'Eastbound'
-            stops: [
-              { id: 'STP1A', description: 'Stop 1-A' },
-              { id: 'STP2A', description: 'Stop 2-A' },
-              { id: 'STP3A', description: 'Stop 3-A' },
-              { id: 'STP4A', description: 'Stop 4-A' },
-              { id: 'STP5A', description: 'Stop 5-A' }
-            ]
-          },
-          {
-            id: '3'
-            description: 'Westbound'
-            stops: [
-              { id: 'STP5A', description: 'Stop 5-A' },
-              { id: 'STP4A', description: 'Stop 4-A' },
-              { id: 'STP3A', description: 'Stop 3-A' },
-              { id: 'STP2A', description: 'Stop 2-A' },
-              { id: 'STP1A', description: 'Stop 1-A' }
-            ]
-          }
-        ]
-      else if routeId is '456'
-        id: '456'
-        description: 'Route 456'
-        directions: [
-          {
-            id: '1'
-            description: 'Northbound'
-            stops: [
-              { id: 'STP1B', description: 'Stop 1-B' },
-              { id: 'STP2B', description: 'Stop 2-B' },
-              { id: 'STP3B', description: 'Stop 3-B' },
-              { id: 'STP4B', description: 'Stop 4-B' },
-              { id: 'STP5B', description: 'Stop 5-B' }
-            ]
-          },
-          {
-            id: '4'
-            description: 'Southbound'
-            stops: [
-              { id: 'STP5B', description: 'Stop 5-B' },
-              { id: 'STP4B', description: 'Stop 4-B' },
-              { id: 'STP3B', description: 'Stop 3-B' },
-              { id: 'STP2B', description: 'Stop 2-B' },
-              { id: 'STP1B', description: 'Stop 1-B' }
-            ]
-          }
-        ]
-      else null
-    Q route
-
   '@noCallThru': true
 
 departureData =
   '@noCallThru': true
+
+security = proxyquire '../../lib/security',
+  '../data/user': userData
 
 nowMoment = {}
 momentStub = ->
@@ -114,6 +46,15 @@ describe "GET /departures", ->
   beforeEach ->
     process.env.RADBUS_TIMEZONE = 'America/Chicago'
     process.env.RADBUS_FUTURE_MINUTES = '60'
+
+    userData.fetch = (authToken) ->
+      user =
+        if authToken is 'foo-token'
+          id: 'foo'
+          displayName: 'Foo User'
+        else null
+
+      Q user
 
     scheduleData.fetch = (userId) ->
       schedule =
@@ -144,7 +85,68 @@ describe "GET /departures", ->
 
       Q schedule
 
+    routeData.fetchDetail = (routeId) ->
+      route =
+        if routeId is '123'
+          id: '123'
+          description: 'Route 123'
+          directions: [
+            {
+              id: '2'
+              description: 'Eastbound'
+              stops: [
+                { id: 'STP1A', description: 'Stop 1-A' },
+                { id: 'STP2A', description: 'Stop 2-A' },
+                { id: 'STP3A', description: 'Stop 3-A' },
+                { id: 'STP4A', description: 'Stop 4-A' },
+                { id: 'STP5A', description: 'Stop 5-A' }
+              ]
+            },
+            {
+              id: '3'
+              description: 'Westbound'
+              stops: [
+                { id: 'STP5A', description: 'Stop 5-A' },
+                { id: 'STP4A', description: 'Stop 4-A' },
+                { id: 'STP3A', description: 'Stop 3-A' },
+                { id: 'STP2A', description: 'Stop 2-A' },
+                { id: 'STP1A', description: 'Stop 1-A' }
+              ]
+            }
+          ]
+        else if routeId is '456'
+          id: '456'
+          description: 'Route 456'
+          directions: [
+            {
+              id: '1'
+              description: 'Northbound'
+              stops: [
+                { id: 'STP1B', description: 'Stop 1-B' },
+                { id: 'STP2B', description: 'Stop 2-B' },
+                { id: 'STP3B', description: 'Stop 3-B' },
+                { id: 'STP4B', description: 'Stop 4-B' },
+                { id: 'STP5B', description: 'Stop 5-B' }
+              ]
+            },
+            {
+              id: '4'
+              description: 'Southbound'
+              stops: [
+                { id: 'STP5B', description: 'Stop 5-B' },
+                { id: 'STP4B', description: 'Stop 4-B' },
+                { id: 'STP3B', description: 'Stop 3-B' },
+                { id: 'STP2B', description: 'Stop 2-B' },
+                { id: 'STP1B', description: 'Stop 1-B' }
+              ]
+            }
+          ]
+        else null
+
+      Q route
+
   afterEach ->
+    # delete enviroment variables so they don't affect other tests
     delete process.env.RADBUS_TIMEZONE
     delete process.env.RADBUS_FUTURE_MINUTES
 
