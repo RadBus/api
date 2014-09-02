@@ -26,35 +26,6 @@ security = proxyquire '../../lib/security',
   '../data/user': userData
 
 scheduleData =
-  fetch: (userId) ->
-    schedule =
-      if userId is 'foo'
-        userId: 'foo'
-        routes: [
-          {
-            id: '123'
-            am:
-              direction: '2'
-              stops: ['STP1A', 'STP2A', '42:foo stop']
-            pm:
-              direction: '3'
-              stops: ['STP5A']
-          },
-          {
-            id: '456'
-            am:
-              direction: '1'
-              stops: ['STP1B']
-            pm:
-              direction: '4'
-              stops: ['STP4B', 'STP5B']
-          }
-        ]
-
-      else null
-
-    Q schedule
-
   '@noCallThru': true
 
 routeData =
@@ -143,6 +114,35 @@ describe "GET /departures", ->
   beforeEach ->
     process.env.RADBUS_TIMEZONE = 'America/Chicago'
     process.env.RADBUS_FUTURE_MINUTES = '60'
+
+    scheduleData.fetch = (userId) ->
+      schedule =
+        if userId is 'foo'
+          userId: 'foo'
+          routes: [
+            {
+              id: '123'
+              am:
+                direction: '2'
+                stops: ['STP1A', 'STP2A', '42:foo stop']
+              pm:
+                direction: '3'
+                stops: ['STP5A']
+            },
+            {
+              id: '456'
+              am:
+                direction: '1'
+                stops: ['STP1B']
+              pm:
+                direction: '4'
+                stops: ['STP4B', 'STP5B']
+            }
+          ]
+
+        else null
+
+      Q schedule
 
   afterEach ->
     delete process.env.RADBUS_TIMEZONE
@@ -549,8 +549,9 @@ describe "GET /departures", ->
 
   it "should return 200 with an empty list when no departures exist", ->
 
-    departureData.fetchByRouteDirectionAndStop = (routeId, directionId, stopId) ->
-      departures = []
+    scheduleData.fetch = (userId) ->
+      departures = null
+      Q departures
 
     request(server)
       .get('/departures')
