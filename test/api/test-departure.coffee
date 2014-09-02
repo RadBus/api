@@ -550,8 +550,7 @@ describe "GET /departures", ->
   it "should return 200 with an empty list when no departures exist", ->
 
     scheduleData.fetch = (userId) ->
-      departures = null
-      Q departures
+      Q null
 
     request(server)
       .get('/departures')
