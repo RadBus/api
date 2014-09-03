@@ -24,7 +24,7 @@
   "dependencies": {
     "restify": "~2.7.0",
     "coffee-script": "~1.7.1",
-    "moment-timezone": "0.0.3",
+    "moment-timezone": "0.2.1",
     "q": "~1.0.1",
     "request": "~2.34.0",
     "mongoose": "~3.8.9",
