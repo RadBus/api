@@ -62,6 +62,26 @@ server.use restify.bodyParser()
 server.use restify.queryParser
   mapParams: false
 
+# request authorization against api tokens
+server.use (req, res, next) ->
+  tokensEnabled = process.env.API_KEYS_ENABLED
+  # only enable api-key access for api URLs
+  if tokensEnabled == 'true' && (/^\/v[1].+/).test(req.url)
+    requestKey = req.headers['api-key']
+    authorizedKeys = process.env.API_KEYS
+    if !!authorizedKeys and requestKey in authorizedKeys.split(",")
+      next()
+    else
+      if !!requestKey && requestKey.length > 0
+        console.log "Invalid API Key [" + requestKey + "]"
+        res.send new restify.InvalidCredentialsError("API key is invalid or expired.")
+      else
+        console.log "Missing API Key"
+        res.send new restify.InvalidCredentialsError("Missing API key header.")
+      next false
+  else
+    next()
+
 # request audit logging
 logRequest = (req, res, route, err) ->
   if err and err.inner

@@ -12,7 +12,7 @@ server = helpers.buildServer '../../api/resources/root'
 describe "GET / (root)", ->
   it "should return 200 with expected application/version structure", ->
     request(server)
-      .get('/')
+      .get('/v1')
       .json(true)
       .expect(200)
       .expect('Content-Type', /json/)

@@ -20,7 +20,7 @@ exports.buildServer = (resourceModulePath, stubs) ->
     else
       require resourceModulePath
 
-  resource.register server, ''
+  resource.register server, '/v1'
 
   server
 
@@ -46,3 +46,26 @@ exports.assert401WithInvalidAuthorizationHeader = (request) ->
       error = res.body
 
       error.message.should.match /Authorization token is invalid or expired/
+
+exports.assert401WithMissingApiKeyHeader = (request) ->
+  request.json(true)
+    .expect(401)
+    .end()
+
+    .should.eventually.be.fulfilled
+    .then (res) ->
+      error = res.body
+
+      error.message.should.match /Missing API key header/
+
+exports.assert401WithInvalidApiKeyHeader = (request) ->
+  request
+    .json(true)
+    .expect(401)
+    .end()
+
+    .should.eventually.be.fulfilled
+    .then (res) ->
+      error = res.body
+
+      error.message.should.match /API key is invalid or expired/

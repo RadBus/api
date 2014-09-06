@@ -23,7 +23,7 @@ server = helpers.buildServer '../../api/resources/route',
 describe "GET /routes", ->
   it "should return 200 with the expected routes", ->
     request(server)
-      .get('/routes')
+      .get('/v1/routes')
       .json(true)
       .expect(200)
       .expect('Content-Type', /json/)

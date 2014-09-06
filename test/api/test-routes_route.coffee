@@ -50,14 +50,14 @@ server = helpers.buildServer '../../api/resources/route',
 describe "GET /routes/:route", ->
   it "should return 404 if no route data exists", ->
     request(server)
-      .get('/routes/456')
+      .get('/v1/routes/456')
       .json(true)
       .expect(404)
       .end()
 
   it "should return 200 with the expected route data if the route exists", ->
     request(server)
-      .get('/routes/123')
+      .get('/v1/routes/123')
       .json(true)
       .expect(200)
       .expect('Content-Type', /json/)

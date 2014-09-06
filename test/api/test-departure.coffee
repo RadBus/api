@@ -150,13 +150,13 @@ describe "GET /departures", ->
 
   it "should return 401 if the Authorization header is missing", ->
     r = request(server)
-      .get('/departures')
+      .get('/v1/departures')
 
     helpers.assert401WithMissingAuthorizationHeader r
 
   it "should return 401 if the authentication token is invalid", ->
     r = request(server)
-      .get('/departures')
+      .get('/v1/departures')
       .headers('Authorization': 'bar-token')
 
     helpers.assert401WithInvalidAuthorizationHeader r
@@ -306,7 +306,7 @@ describe "GET /departures", ->
       Q departures
 
     request(server)
-      .get('/departures')
+      .get('/v1/departures')
       .json(true)
       .headers('Authorization': 'foo-token')
       .expect(200)
@@ -504,7 +504,7 @@ describe "GET /departures", ->
       Q departures
 
     request(server)
-      .get('/departures')
+      .get('/v1/departures')
       .json(true)
       .headers('Authorization': 'foo-token')
       .expect(200)
