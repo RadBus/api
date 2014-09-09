@@ -59,13 +59,13 @@ describe "util/api-key", ->
       delete process.env.API_KEYS_ENABLED
       delete process.env.API_KEYS
 
-    it "should return 405 if the API key is missing", ->
+    it "should return 401 if the API key is missing", ->
       r = request(server)
         .get('/v1/routes')
 
       helpers.assert401WithMissingApiKeyHeader r
 
-    it "should return 405 if the API key is invalid", ->
+    it "should return 401 if the API key is invalid", ->
       r = request(server)
         .get('/v1/routes')
         .headers('api-key': 'bar-token')
