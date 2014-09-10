@@ -145,13 +145,13 @@ describe "GET /schedule", ->
 
   it "should return 401 if the Authorization header is missing", ->
     r = request(server)
-      .get('/v1/schedule')
+      .get('/schedule')
 
     helpers.assert401WithMissingAuthorizationHeader r
 
   it "should return 401 if the authentication token is invalid", ->
     r = request(server)
-      .get('/v1/schedule')
+      .get('/schedule')
       .headers('Authorization': 'bar-token')
 
     helpers.assert401WithInvalidAuthorizationHeader r
@@ -160,7 +160,7 @@ describe "GET /schedule", ->
     scheduleDocument = null
 
     request(server)
-      .get('/v1/schedule')
+      .get('/schedule')
       .json(true)
       .headers('Authorization': 'foo-token')
       .expect(200)
@@ -177,7 +177,7 @@ describe "GET /schedule", ->
 
   it "should return 200 with the expected user and route information if the user has a schedule", ->
     request(server)
-      .get('/v1/schedule')
+      .get('/schedule')
       .json(true)
       .headers('Authorization': 'foo-token')
       .expect(200)
@@ -257,7 +257,7 @@ describe "GET /schedule", ->
     scheduleDocument.routes[0].id = '789'
 
     request(server)
-      .get('/v1/schedule')
+      .get('/schedule')
       .json(true)
       .headers('Authorization': 'foo-token')
       .expect(200)
@@ -282,7 +282,7 @@ describe "GET /schedule", ->
     scheduleDocument.routes[0].am.direction = '42'
 
     request(server)
-      .get('/v1/schedule')
+      .get('/schedule')
       .json(true)
       .headers('Authorization': 'foo-token')
       .expect(200)
@@ -307,7 +307,7 @@ describe "GET /schedule", ->
     scheduleDocument.routes[0].am.stops[0] = 'STP42'
 
     request(server)
-      .get('/v1/schedule')
+      .get('/schedule')
       .json(true)
       .headers('Authorization': 'foo-token')
       .expect(200)
@@ -351,13 +351,13 @@ describe "POST /schedule/routes", ->
 
   it "should return 401 if the Authorization header is missing", ->
     r = request(server)
-      .post('/v1/schedule/routes')
+      .post('/schedule/routes')
 
     helpers.assert401WithMissingAuthorizationHeader r
 
   it "should return 401 if the authentication token is invalid", ->
     r = request(server)
-      .post('/v1/schedule/routes')
+      .post('/schedule/routes')
       .headers('Authorization': 'bar-token')
 
     helpers.assert401WithInvalidAuthorizationHeader r
@@ -365,7 +365,7 @@ describe "POST /schedule/routes", ->
   describe "should return 400 with expected validation errors if", ->
     assert400WithValidationError = (route, matchRegEx) ->
       request(server)
-        .post('/v1/schedule/routes')
+        .post('/schedule/routes')
         .json(route)
         .headers('Authorization': 'foo-token')
         .expect(400)
@@ -527,7 +527,7 @@ describe "POST /schedule/routes", ->
       Q()
 
     request(server)
-      .post('/v1/schedule/routes')
+      .post('/schedule/routes')
       .json({
         id: '456'
         am:
@@ -577,7 +577,7 @@ describe "POST /schedule/routes", ->
       Q()
 
     request(server)
-      .post('/v1/schedule/routes')
+      .post('/schedule/routes')
       .json({
         id: '456'
         am:
@@ -631,7 +631,7 @@ describe "POST /schedule/routes", ->
       Q()
 
     request(server)
-      .post('/v1/schedule/routes')
+      .post('/schedule/routes')
       .json({
         id: '123'
         am:
@@ -715,13 +715,13 @@ describe "DELETE /schedule/routes/:route", ->
 
   it "should return 401 if the Authorization header is missing", ->
     r = request(server)
-      .del('/v1/schedule/routes/456')
+      .del('/schedule/routes/456')
 
     helpers.assert401WithMissingAuthorizationHeader r
 
   it "should return 401 if the authentication token is invalid", ->
     r = request(server)
-      .del('/v1/schedule/routes/456')
+      .del('/schedule/routes/456')
       .headers('Authorization': 'bar-token')
 
     helpers.assert401WithInvalidAuthorizationHeader r
@@ -730,7 +730,7 @@ describe "DELETE /schedule/routes/:route", ->
     scheduleDocument = null
 
     request(server)
-      .del('/v1/schedule/routes/42')
+      .del('/schedule/routes/42')
       .headers('Authorization': 'foo-token')
       .json(true)
       .expect(400)
@@ -745,7 +745,7 @@ describe "DELETE /schedule/routes/:route", ->
 
   it "should return 400 with expected validation errors if the specified route doesn't exist in the user's schedule", ->
     request(server)
-      .del('/v1/schedule/routes/42')
+      .del('/schedule/routes/42')
       .headers('Authorization': 'foo-token')
       .json(true)
       .expect(400)
@@ -768,7 +768,7 @@ describe "DELETE /schedule/routes/:route", ->
       Q()
 
     request(server)
-      .del('/v1/schedule/routes/456')
+      .del('/schedule/routes/456')
       .headers('Authorization': 'foo-token')
       .json(true)
       .expect(204)

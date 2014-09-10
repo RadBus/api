@@ -20,7 +20,7 @@ exports.buildServer = (resourceModulePath, stubs) ->
     else
       require resourceModulePath
 
-  resource.register server, '/v1'
+  resource.register server, ''
 
   server
 
@@ -69,3 +69,19 @@ exports.assert401WithInvalidApiKeyHeader = (request) ->
       error = res.body
 
       error.message.should.match /API key is invalid or expired/
+
+exports.assertAppVersionResponse = (request) ->
+  request
+    .json(true)
+    .expect(200)
+    .expect('Content-Type', /json/)
+    .end()
+          
+    .should.eventually.be.fulfilled
+    .then (res) ->
+      body = res.body
+
+      body.should.be.an 'object'
+      body.should.have.property 'service_name'
+      body.should.have.property 'app_version'
+      body.should.have.property 'api_version'

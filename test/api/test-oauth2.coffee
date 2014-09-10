@@ -20,7 +20,7 @@ describe "GET /oauth2", ->
 
   it "should return 200 with expected data", ->
     request(server)
-      .get('/v1/oauth2')
+      .get('/oauth2')
       .json(true)
       .expect(200)
       .expect('Content-Type', /json/)

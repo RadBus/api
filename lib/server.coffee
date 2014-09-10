@@ -66,19 +66,22 @@ server.use restify.queryParser
 server.use (req, res, next) ->
   tokensEnabled = process.env.API_KEYS_ENABLED
   # only enable api-key access for api URLs
-  if tokensEnabled == 'true' && (/^\/v[1].+/).test(req.url)
-    requestKey = req.headers['api-key']
-    authorizedKeys = process.env.API_KEYS
-    if !!authorizedKeys and requestKey in authorizedKeys.split(",")
+  if tokensEnabled == 'true'
+    if (/^\/$/.test(req.url) || /^\/v[1]$/.test(req.url))
       next()
     else
-      if !!requestKey && requestKey.length > 0
-        console.log "Invalid API Key [" + requestKey + "]"
-        res.send new restify.InvalidCredentialsError("API key is invalid or expired.")
+      requestKey = req.headers['api-key']
+      authorizedKeys = process.env.API_KEYS
+      if !!authorizedKeys and requestKey in authorizedKeys.split(",")
+        next()
       else
-        console.log "Missing API Key"
-        res.send new restify.InvalidCredentialsError("Missing API key header.")
-      next false
+        if !!requestKey && requestKey.length > 0
+          console.log "Invalid API Key [" + requestKey + "]"
+          res.send new restify.InvalidCredentialsError("API key is invalid or expired.")
+        else
+          console.log "Missing API Key"
+          res.send new restify.InvalidCredentialsError("Missing API key header.")
+        next false
   else
     next()
 

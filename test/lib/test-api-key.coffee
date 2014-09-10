@@ -29,7 +29,7 @@ describe "util/api-key", ->
 
     it "#api-key disabled : should return 200 with the expected routes", ->
       request(server)
-        .get('/v1/routes')
+        .get('/routes')
         .json(true)
         .expect(200)
         .expect('Content-Type', /json/)
@@ -61,13 +61,13 @@ describe "util/api-key", ->
 
     it "should return 401 if the API key is missing", ->
       r = request(server)
-        .get('/v1/routes')
+        .get('/routes')
 
       helpers.assert401WithMissingApiKeyHeader r
 
     it "should return 401 if the API key is invalid", ->
       r = request(server)
-        .get('/v1/routes')
+        .get('/routes')
         .headers('api-key': 'bar-token')
 
       helpers.assert401WithInvalidApiKeyHeader r
@@ -75,7 +75,7 @@ describe "util/api-key", ->
 
     it "should return 200 with the expected routes if API key is valid", ->
       request(server)
-        .get('/v1/routes')
+        .get('/routes')
         .headers('api-key': '4321')
         .json(true)
         .expect(200)
@@ -96,3 +96,6 @@ describe "util/api-key", ->
           route = body[1]
           route.should.have.property 'id', '456'
           route.should.have.property 'description', 'Route 456'
+
+    
+

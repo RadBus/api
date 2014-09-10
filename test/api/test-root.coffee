@@ -10,19 +10,30 @@ helpers = require './helpers'
 server = helpers.buildServer '../../api/resources/root'
 
 describe "GET / (root)", ->
-  it "should return 200 with expected application/version structure", ->
-    request(server)
-      .get('/v1')
-      .json(true)
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end()
 
-      .should.eventually.be.fulfilled
-      .then (res) ->
-        body = res.body
+  describe "api-key disabled", ->
+    beforeEach ->
+      process.env.API_KEYS_ENABLED = 'false'
+    afterEach ->
+      delete process.env.API_KEYS_ENABLED
+  
+    it "should return 200 with expected application/version structure", ->
+      r = request(server)
+        .get('/')
 
-        body.should.be.an 'object'
-        body.should.have.property 'service_name'
-        body.should.have.property 'app_version'
-        body.should.have.property 'api_version'
+      helpers.assertAppVersionResponse r
+
+  describe "api-key enabled", ->
+    beforeEach ->
+      process.env.API_KEYS_ENABLED = 'true'
+      process.env.API_KEYS = '1234,4321'
+
+    afterEach ->
+      delete process.env.API_KEYS_ENABLED
+      delete process.env.API_KEYS
+
+    it "should return 200 with expected application/version structure", ->
+      r = request(server)
+        .get('/')
+
+      helpers.assertAppVersionResponse r
