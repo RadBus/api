@@ -34,21 +34,6 @@ describe "util/api-key", ->
         .expect(200)
         .expect('Content-Type', /json/)
         .end()
-
-        .should.eventually.be.fulfilled
-        .then (res) ->
-          body = res.body
-
-          body.should.be.an('array')
-            .with.length 2
-
-          route = body[0]
-          route.should.have.property 'id', '123'
-          route.should.have.property 'description', 'Route 123'
-
-          route = body[1]
-          route.should.have.property 'id', '456'
-          route.should.have.property 'description', 'Route 456'
   
   describe "api-key checking enabled", ->
     beforeEach ->
@@ -81,21 +66,4 @@ describe "util/api-key", ->
         .expect(200)
         .expect('Content-Type', /json/)
         .end()
-
-        .should.eventually.be.fulfilled
-        .then (res) ->
-          body = res.body
-
-          body.should.be.an('array')
-            .with.length 2
-
-          route = body[0]
-          route.should.have.property 'id', '123'
-          route.should.have.property 'description', 'Route 123'
-
-          route = body[1]
-          route.should.have.property 'id', '456'
-          route.should.have.property 'description', 'Route 456'
-
-    
 
