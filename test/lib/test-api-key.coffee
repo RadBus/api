@@ -23,9 +23,9 @@ server = helpers.buildServer '../../api/resources/route',
 describe "util/api-key", ->
   describe "api-key checking disabled", ->
     beforeEach ->
-      process.env.API_KEYS_ENABLED = 'false'
+      process.env.RADBUS_API_KEYS_ENABLED = 'false'
     afterEach ->
-      delete process.env.API_KEYS_ENABLED
+      delete process.env.RADBUS_API_KEYS_ENABLED
 
     it "#api-key disabled : should return 200 with the expected routes", ->
       request(server)
@@ -52,12 +52,12 @@ describe "util/api-key", ->
   
   describe "api-key checking enabled", ->
     beforeEach ->
-      process.env.API_KEYS_ENABLED = 'true'
-      process.env.API_KEYS = '1234,4321'
+      process.env.RADBUS_API_KEYS_ENABLED = 'true'
+      process.env.RADBUS_API_KEYS = '1234,4321'
 
     afterEach ->
-      delete process.env.API_KEYS_ENABLED
-      delete process.env.API_KEYS
+      delete process.env.RADBUS_API_KEYS_ENABLED
+      delete process.env.RADBUS_API_KEYS
 
     it "should return 401 if the API key is missing", ->
       r = request(server)

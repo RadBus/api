@@ -64,14 +64,14 @@ server.use restify.queryParser
 
 # request authorization against api tokens
 server.use (req, res, next) ->
-  tokensEnabled = process.env.API_KEYS_ENABLED
+  tokensEnabled = process.env.RADBUS_API_KEYS_ENABLED
   # only enable api-key access for api URLs
   if tokensEnabled == 'true'
     if (/^\/$/.test(req.url) || /^\/v[1]$/.test(req.url))
       next()
     else
       requestKey = req.headers['api-key']
-      authorizedKeys = process.env.API_KEYS
+      authorizedKeys = process.env.RADBUS_API_KEYS
       if !!authorizedKeys and requestKey in authorizedKeys.split(",")
         next()
       else
