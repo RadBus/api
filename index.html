@@ -88,6 +88,7 @@
 <li><a href="#fetch-get-v1schedule">Fetch (GET /v1/schedule)</a></li>
 <li><a href="#addupdate-route-post-v1scheduleroutes">Add/Update Route (POST /v1/schedule/routes)</a></li>
 <li><a href="#remove-route-delete-v1scheduleroutesroute">Remove Route (DELETE /v1/schedule/routes/:route)</a></li>
+<li><a href="#remove-schedule-delete-v1schedule">Remove Schedule (DELETE /v1/schedule)</a></li>
 </ul>
 </li>
 <li>
@@ -441,6 +442,31 @@ Authorization: Bearer &lt;oauth2-token&gt;
 <a name="failure-responses-1" class="anchor" href="#failure-responses-1"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
 
 <p><code>400 Bad Request</code>: The specified route did not exist within the schedule.</p>
+
+<h4>
+  <a name="remove-schedule-delete-v1schedule" class="anchor" href="#remove-schedule-delete-v1schedule"><span class="octicon octicon-link"></span></a>Remove Schedule (DELETE /v1/schedule)</h4>
+
+<p>Removes the authenticated user's schedule.</p>
+
+<h5>
+<a name="sample-request-6" class="anchor" href="#sample-request-6"><span class="octicon octicon-link"></span></a>Sample Request</h5>
+
+<p>Requires <a href="#authentication">Authentication</a></p>
+
+<pre><code>DELETE https://api.radbus.io/v1/schedule
+Authorization: Bearer &lt;oauth2-token&gt;
+</code></pre>
+
+<h5>
+<a name="sample-success-response-5" class="anchor" href="#sample-success-response-5"><span class="octicon octicon-link"></span></a>Sample Success Response</h5>
+
+<p><code>204 No Content</code></p>
+
+<h5>
+<a name="failure-responses-1" class="anchor" href="#failure-responses-1"><span class="octicon octicon-link"></span></a>Failure Responses</h5>
+
+<p><code>400 Bad Request</code>: User does not yet have a schedule.</p>
+
 
 <h3>
 <a name="departures-resource" class="anchor" href="#departures-resource"><span class="octicon octicon-link"></span></a>Departures Resource</h3>
