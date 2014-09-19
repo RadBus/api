@@ -20,3 +20,14 @@ exports.upsert = (schedule) ->
 
   # Wrap promise returned by Mongoose in a Q promise
   Q p
+
+exports.remove = (schedule) ->
+  p =
+    Schedule.findOne
+      userId: schedule.userId
+    .remove().exec()
+
+  # Wrap promise returned by Mongoose in a Q promise
+  Q p
+
+

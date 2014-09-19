@@ -29,6 +29,11 @@ exports.register = (server, baseRoute) ->
           routeId: req.params.route
         remove userRouteId
 
+  http.delete server, "#{baseRoute}/schedule", (req) ->
+    security.getUser(req)
+      .then (user) ->
+        removeSchedule user
+
 getUserSchedule = (user) ->
   scheduleData.fetch(user.id)
     .then (schedule) ->
@@ -218,3 +223,14 @@ remove = (userRouteId) ->
           scheduleData.upsert(schedule)
             .then ->
               204
+
+removeSchedule = (user) ->
+  getUserSchedule(user)
+    .then (userSchedule) ->
+      if not userSchedule.schedule
+        Q.reject new restify.InvalidContentError(
+          "User does not yet have a schedule")
+      else
+        scheduleData.remove(userSchedule.schedule)
+          .then ->
+            204

@@ -788,3 +788,75 @@ describe "DELETE /schedule/routes/:route", ->
 
           route = updatedSchedule.routes[1]
           route.should.have.property 'id', '321'
+
+describe "DELETE /schedule", ->
+  beforeEach ->
+    scheduleDocument =
+      _id: 'foo-doc-id'
+      userId: 'foo'
+      routes: [
+        {
+          id: '123'
+          am:
+            direction: '2'
+            stops: ['STP1A', 'STP2A']
+          pm:
+            direction: '3'
+            stops: ['STP5A']
+        },
+        {
+          id: '321'
+          am:
+            direction: '2'
+            stops: ['STP1C']
+          pm:
+            direction: '3'
+            stops: ['STP2C']
+        }
+      ]
+      toObject: ->
+        scheduleDocument.toObjectCalled = true
+        scheduleDocument
+      toObjectCalled: false
+
+  it "should return 401 if the Authorization header is missing", ->
+    r = request(server)
+      .del('/schedule')
+
+    helpers.assert401WithMissingAuthorizationHeader r
+
+  it "should return 400 with expected validation errors if the user's schedule doesn't exist", ->
+    scheduleDocument = null
+    request(server)
+      .del('/schedule')
+      .headers('Authorization': 'foo-token')
+      .json(true)
+      .expect(400)
+      .end()
+
+      .should.eventually.be.fulfilled
+        .then (res) ->
+          error = res.body
+
+          error.should.have.property('message')
+            .and.match /User does not yet have a schedule/
+ 
+  it "should return 204 and delete the user's schedules", ->
+    removedSchedule = null
+    didRemove = false
+
+    scheduleData.remove = (schedule) ->
+      removedSchedule = schedule
+      didRemove = true
+      Q()
+
+    request(server)
+      .del('/schedule')
+      .headers('Authorization': 'foo-token')
+      .json(true)
+      .expect(204)
+      .end()
+
+      .should.eventually.be.fulfilled
+        .then ->
+          didRemove.should.be.true

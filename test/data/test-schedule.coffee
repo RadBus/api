@@ -185,3 +185,28 @@ describe "data/schedule", ->
 
       .should.eventually.be.fulfilled
         .then assertFooSchedule
+
+  describe "#delete()", ->
+    it "should return an empty set if the specified schedule doesn't exist", ->
+      target.remove('foo')
+        .should.eventually.be.fulfilled.then (schedule) ->
+          expect(schedule).to.have.length(0)
+
+    it "should delete an existing schedule document", ->
+      Schedule.create [
+        barSchedule
+      ]
+      .then ->
+        Schedule.find().exec()
+
+      .should.eventually.be.fulfilled
+        .and.have.length(1)
+
+      .then ->
+        target.remove barSchedule
+      .then ->
+        Schedule.find().exec()
+
+      .should.eventually.be.fulfilled
+        .and.have.length(0)
+
