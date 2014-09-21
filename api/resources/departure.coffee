@@ -19,12 +19,12 @@ fetch = (user) ->
   now = moment()
   noon = moment(now).tz(process.env.RADBUS_TIMEZONE)
     .startOf('day')
-    .add 'hours', 12
+    .add 12, 'hours'
   isMorning = now.isBefore noon
 
   # determine how far into the future to return departures
-  cutOff = moment(now).add 'minutes',
-    parseInt(process.env.RADBUS_FUTURE_MINUTES)
+  futureMinutes = parseInt(process.env.RADBUS_FUTURE_MINUTES)
+  cutOff = moment(now).add futureMinutes, 'minutes'
 
   # fetch the user's schedule and get departure data
   scheduleData.fetch(user.id)
