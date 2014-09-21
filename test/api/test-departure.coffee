@@ -32,7 +32,7 @@ momentStub = ->
   else
     # return new instance so it can be mutated
     # and not effect instance returned by next call
-    moment(nowMoment)
+    moment nowMoment
 
 # build server
 server = helpers.buildServer '../../api/resources/departure',
@@ -165,7 +165,7 @@ describe "GET /departures", ->
 
   it "should return 200 with the expected AM departures, when it's morning", ->
     # now = 7AM Central
-    nowMoment = moment('2014-05-01T07:00-05:00')
+    nowMoment = moment '2014-05-01T07:00-05:00'
 
     # mock departures that return at 7AM
     departureData.fetchByRouteDirectionAndStop = (routeId, directionId, stopId) ->
