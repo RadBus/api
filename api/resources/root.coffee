@@ -1,7 +1,7 @@
 http = require '../../lib/http'
 Q = require 'q'
 
-API_VERSION = '1.3.0'
+API_VERSION = '1.3.1'
 
 exports.register = (server, baseRoute) ->
   http.get server, "#{baseRoute}/", -> fetch server

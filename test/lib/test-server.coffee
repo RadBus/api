@@ -27,15 +27,15 @@ describe "lib/server", ->
     afterEach ->
       delete process.env.RADBUS_API_KEYS_ENABLED
 
-    it "#API key disabled : should return 200 with the expected routes", ->
+    it "should return 200 with the expected routes", ->
       request(server)
         .get('/routes')
         .json(true)
         .expect(200)
         .expect('Content-Type', /json/)
         .end()
-  
-  describe "api-key checking enabled", ->
+
+  describe "API key checking enabled", ->
     beforeEach ->
       process.env.RADBUS_API_KEYS_ENABLED = 'true'
       process.env.RADBUS_API_KEYS = '1234,4321'
@@ -66,4 +66,3 @@ describe "lib/server", ->
         .expect(200)
         .expect('Content-Type', /json/)
         .end()
-
