@@ -22,13 +22,13 @@
   },
   "homepage": "https://github.com/TargetRAD/bus-api",
   "dependencies": {
-    "restify": "~2.7.0",
     "coffee-script": "~1.7.1",
-    "moment-timezone": "0.2.1",
+    "lodash": "~2.4.1",
+    "moment-timezone": "^0.2.2",
+    "mongoose": "~3.8.9",
     "q": "~1.0.1",
     "request": "~2.34.0",
-    "mongoose": "~3.8.9",
-    "lodash": "~2.4.1"
+    "restify": "~2.7.0"
   },
   "devDependencies": {
     "gulp": "~3.8.8",
