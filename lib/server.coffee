@@ -70,7 +70,7 @@ server.use (req, res, next) ->
     if (/^\/$/.test(req.url) || /^\/v[1]$/.test(req.url))
       next()
     else
-      requestKey = req.headers['api-key']
+      requestKey = req.headers['API-Key']
       authorizedKeys = process.env.RADBUS_API_KEYS
       if !!authorizedKeys and requestKey in authorizedKeys.split(",")
         next()
