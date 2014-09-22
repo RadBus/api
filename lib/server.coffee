@@ -99,6 +99,7 @@ logRequest = (req, res, route, err) ->
   contentType = req.header('Content-Type') or '-'
   requestId = req.header('X-Request-ID') or '-'
   accept = req.header('Accept') or '-'
+  apiKey = req.header('API-Key') or '-'
   status = res.statusCode
   contentType = res.header('Content-Type') or '-'
   contentLength = res.header('Content-Length') or '-'
@@ -106,7 +107,7 @@ logRequest = (req, res, route, err) ->
 
   console.log "#{LOG_PREFIX}#{xForwardFor} \"#{method} #{url} " +
               "HTTP/#{httpVersion}\" " +
-              "request-id=#{requestId} accept=#{accept} status=#{status} " +
+              "request-id=#{requestId} accept=#{accept} api-key=#{apiKey} status=#{status} " +
               "#{contentType}:#{contentLength} \"#{userAgent}\""
 
 server.on 'after', logRequest
