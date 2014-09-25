@@ -1,6 +1,7 @@
 # RadBus Web API
 
 [ ![Codeship Status for TargetRAD/radbus-api](https://www.codeship.io/projects/1f8c7e60-c700-0131-5428-0277a4446f20/status)](https://www.codeship.io/projects/22112)
+[ ![Dependency Status](https://david-dm.org/TargetRAD/radbus-api/status.svg?theme=shields.io)](https://david-dm.org/TargetRAD/radbus-api)
 
 You've found the source code for the RadBus Web API!  This API enables applications to obtain upcoming Twin Cities Metro Transit departure information for users with configured route schedules. The most practical use case is when an end user has multiple transit route/stop options and needs to make a quick decision right now on which one makes the most sense.
 
