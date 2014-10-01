@@ -550,7 +550,6 @@ describe "GET /departures", ->
           departure.should.have.deep.property 'stop.description', 'Stop 5-B'
 
   it "should return 200 with an empty list when no departures exist", ->
-
     scheduleData.fetch = (userId) ->
       Q null
 
@@ -566,3 +565,105 @@ describe "GET /departures", ->
           departures = res.body
           departures.should.be.an('array')
             .with.length 0
+
+  it "should return departures with location data if it exists", ->
+    # now = 3PM Central
+    nowMoment = moment('2014-05-01T15:00-05:00')
+
+    # mock departures that contain location data
+    departureData.fetchByRouteDirectionAndStop = (routeId, directionId, stopId) ->
+      departures =
+        if routeId is '123'
+          # PM departures
+          if directionId is '3'
+            if stopId is 'STP5A'
+              [
+                {
+                  routeId: '123'
+                  time: moment '2014-05-01T15:00-05:00'
+                  location:
+                    lat: 100
+                    long: -100
+                },
+                {
+                  routeId: '123'
+                  time: moment '2014-05-01T15:30-05:00'
+                }
+              ]
+
+        else if routeId is '456'
+          # PM departures
+          if directionId is '4'
+            if stopId is 'STP4B'
+              [
+                {
+                  routeId: '456'
+                  time: moment '2014-05-01T15:25-05:00'
+                }
+              ]
+
+            else if stopId is 'STP5B'
+              [
+                {
+                  routeId: '456'
+                  time: moment '2014-05-01T15:45-05:00'
+                  location:
+                    lat: 42
+                    long: -42
+                }
+              ]
+
+      if not departures
+        departures = []
+
+      Q departures
+
+    request(server)
+      .get('/departures')
+      .json(true)
+      .headers('Authorization': 'foo-token')
+      .expect(200)
+      .end()
+
+      .should.eventually.be.fulfilled
+        .then (res) ->
+          departures = res.body
+
+          departures.should.be.an('array')
+            .with.length 4
+
+          # expect only the PM departures, in time order, for the next hour only
+          index = 0
+
+          departure = departures[index++]
+
+          console.log "departure = %j", departure
+
+          moment(departure.time).isSame('2014-05-01T15:00-05:00')
+            .should.be.true
+          departure.should.have.deep.property 'route.id', '123'
+          departure.should.have.deep.property 'stop.id', 'STP5A'
+          departure.should.have.deep.property 'location.lat', 100
+          departure.should.have.deep.property 'location.long', -100
+
+          departure = departures[index++]
+          moment(departure.time).isSame('2014-05-01T15:25-05:00')
+            .should.be.true
+          departure.should.have.deep.property 'route.id', '456'
+          departure.should.have.deep.property 'stop.id', 'STP4B'
+          departure.should.not.have.property 'location'
+
+          departure = departures[index++]
+          moment(departure.time).isSame('2014-05-01T15:30-05:00')
+            .should.be.true
+          departure.should.have.deep.property 'route.id', '123'
+          departure.should.have.deep.property 'stop.id', 'STP5A'
+          departure.should.not.have.property 'location'
+
+          departure = departures[index++]
+          moment(departure.time).isSame('2014-05-01T15:45-05:00')
+            .should.be.true
+          departure.should.have.deep.property 'route.id', '456'
+          departure.should.have.deep.property 'stop.id', 'STP5B'
+          departure.should.have.deep.property 'location.lat', 42
+          departure.should.have.deep.property 'location.long', -42
