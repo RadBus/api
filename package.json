@@ -1,6 +1,6 @@
 {
   "name": "radbus-api",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "engines": {
     "node": "0.10.24"
   },
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/TargetRAD/bus-api.git"
+    "url": "git://github.com/RadBus/api.git"
   },
   "author": "twistedstream",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TargetRAD/bus-api/issues"
+    "url": "https://github.com/RadBus/api/issues"
   },
-  "homepage": "https://github.com/TargetRAD/bus-api",
+  "homepage": "http://dev.radbus.io",
   "dependencies": {
     "coffee-script": "~1.8.0",
     "lodash": "~2.4.1",
