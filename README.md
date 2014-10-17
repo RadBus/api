@@ -3,7 +3,7 @@
 [ ![Codeship Status for RadBus/api](https://www.codeship.io/projects/1f8c7e60-c700-0131-5428-0277a4446f20/status)](https://www.codeship.io/projects/22112)
 [ ![Dependency Status](https://david-dm.org/RadBus/api/status.svg?theme=shields.io)](https://david-dm.org/RadBus/api)
 
-You've found the source code for the RadBus Web API
+You've found the source code for the RadBus Web API!
 
 To learn more about RadBus, check out: http://dev.radbus.io
 
