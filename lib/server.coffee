@@ -19,6 +19,7 @@ server.on 'MethodNotAllowed', (req, res, next) ->
       'Accept-Version'
       'Content-Type'
       'Authorization'
+      'API-Key'
     ]
     allowMethods = [
       'GET'
