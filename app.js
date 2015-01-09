@@ -1,5 +1,6 @@
 'use strict';
 
+require('newrelic');
 require('coffee-script/register');
 var server = require('./lib/server');
 var db = require('./lib/db');
